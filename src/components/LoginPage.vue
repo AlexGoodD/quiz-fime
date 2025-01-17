@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="container">
     <h2>Inicio de sesión</h2>
     <div class="input-group">
       <label for="email">Email</label>
@@ -19,149 +19,82 @@
       </div>
     </div>
     <button @click="handleLogin">Iniciar sesión</button>
-    <p>¿No tienes una cuenta? <router-link to="/register">Regístrate</router-link></p>
+    <p>¿No tienes una cuenta? <a @click="switchToRegister">Regístrate</a></p>
     <div class="google-login">
-      <p>O inicia sesión con</p>
-      <button @click="handleGoogleLogin" class="google-login">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxS5iRASsr50ASJqYsyAvcew2ICajtSGVkJw&s" alt="Google Logo" />
-        Google
-      </button>
-    </div>
+    <p>O inicia sesión con</p>
+    <button @click="handleGoogleLogin" class="google-login-button">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxS5iRASsr50ASJqYsyAvcew2ICajtSGVkJw&s" alt="Google Logo" />
+      Google
+    </button>
+  </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue';
 import { login, loginWithGoogle } from '../services/authService';
+
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
-const emits = defineEmits(['loginSuccess']);
+const errorMessage = ref('');
+const emits = defineEmits(['loginSuccess', 'switchToRegister']);
+
 function togglePasswordVisibility() {
   showPassword.value = !showPassword.value;
 }
+
 async function handleLogin() {
+  errorMessage.value = '';
   try {
     await login(email.value, password.value);
     emits('loginSuccess');
   } catch (error) {
-    console.error('Login failed:', error);
+    errorMessage.value = (error as any).message;
   }
 }
+
 async function handleGoogleLogin() {
   try {
     await loginWithGoogle();
     emits('loginSuccess');
   } catch (error) {
-    console.error('Google login failed:', error);
+    errorMessage.value = 'Google login failed: ' + (error as any).message;
   }
 }
+
+function switchToRegister() {
+  emits('switchToRegister');
+}
 </script>
+
 <style scoped>
 @import '@fortawesome/fontawesome-free/css/all.css';
-.login-container {
-  width: 300px;
-  padding: 20px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-.input-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 15px;
-  color: #333;
-  font-weight: 520;
-}
-.input-with-icon {
-  position: relative;
-}
-.input-with-icon i {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ccc;
-}
-.input-with-icon input {
-  width: calc(100% - 40px);
-  padding: 8px 8px 8px 30px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-.password-container {
-  position: relative;
+@import '../assets/auth.css';
+
+.google-login {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
-#icon-der {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ccc;
-}
-#icon-izq {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ccc;
-}
-.password-container input {
-  width: calc(100% - 40px);
-  padding: 8px 30px 8px 30px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-.password-container .toggle-password {
-  position: absolute;
-  left: 0px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #666;
-  font-size: 16px;
-}
-.password-container .toggle-password:hover {
-  color: #000;
-}
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-button:hover {
-  background-color: #0056b3;
-}
-.google-login button {
+
+.google-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: transparent;
   color: black;
   font-size: 12px;
   border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  padding: 5px 10px;
   width: 50%;
 }
-.google-login img {
+
+.google-login-button img {
   width: 25px;
   height: 25px;
-  cursor: pointer;
+  margin-right: 5px;
 }
+
+
 </style>

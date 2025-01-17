@@ -1,8 +1,8 @@
 <template>
   <div>
-      <h1>{{ title }}</h1>
+      <h1>{{ props.title }}</h1>
       <select v-model="selectedOption" @change="updateOption">
-          <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
+          <option v-for="option in props.options" :key="option" :value="option">{{ option }}</option>
       </select>
       <div v-if="selectedOption">
           <p>Opción seleccionada: {{ selectedOption }}</p>
@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"> 
 import { defineProps, defineEmits, ref } from 'vue';
 
 const props = defineProps<{

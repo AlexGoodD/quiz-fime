@@ -1,8 +1,8 @@
 <template>
     <div>
         <h1>{{ props.question }}</h1>
-        <button @click="selectTrue">True</button>
-        <button @click="selectFalse">False</button>
+        <button @click="selectTrue" class="true">True</button>
+        <button @click="selectFalse" class="false">False</button>
     </div>
 </template>
 
@@ -27,4 +27,12 @@ function selectFalse() {
 </script>
 
 <style scoped>
+.true {
+  background-color: green;
+}
+
+.false {
+  background-color: red;
+}
+
 </style>
