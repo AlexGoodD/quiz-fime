@@ -1,11 +1,12 @@
 <template>
-  <Home/>
+  <div id="app">
+    <AppHeader />
+    <router-view />
+  </div>
 </template>
-
 <script setup lang="ts">
-import Home from './views/HomeView.vue'
+import AppHeader from './components/AppHeader.vue';
 </script>
-
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -14,16 +15,13 @@ import Home from './views/HomeView.vue'
   text-align: center;
   color: #2c3e50;
 }
-
 nav {
   padding: 30px;
 }
-
 nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 nav a.router-link-exact-active {
   color: #42b983;
 }

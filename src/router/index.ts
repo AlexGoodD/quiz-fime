@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import QuizView from '../views/QuizView.vue';
 import ResultPage from '../components/ResultPage.vue';
-
+import { auth } from '../firebase';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -13,22 +13,33 @@ const routes: Array<RouteRecordRaw> = [
     path: '/quiz',
     name: 'quiz',
     component: QuizView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/result',
     name: 'result',
     component: ResultPage,
+    meta: { requiresAuth: true },
   },
   {
     path: '/about',
     name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    component: () => import( '../views/AboutView.vue'),
   },
 ];
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  auth.onAuthStateChanged(user => {
+    const isAuthenticated = !!user;
+    if (requiresAuth && !isAuthenticated) {
+      next('/');
+    } else {
+      next();
+    }
+  });
+});
 export default router;
