@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>{{ question }}</h1>
+        <h1>{{ props.question }}</h1>
         <button @click="selectTrue">True</button>
         <button @click="selectFalse">False</button>
     </div>

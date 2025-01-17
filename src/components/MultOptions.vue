@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h1>{{ title }}</h1>
-        <div v-for="option in options" :key="option">
+        <h1>{{ props.title }}</h1>
+        <div v-for="option in props.options" :key="option">
             <button @click="selectOption(option)">{{ option }}</button>
         </div>
     </div>

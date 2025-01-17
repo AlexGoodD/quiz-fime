@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>{{ question }}</h1>
+        <h1>{{ props.question }}</h1>
         <input type="range" min="1" max="5" v-model="sliderValue" @input="updateValue" />
         <span>{{ sliderValue }}</span>
     </div>
