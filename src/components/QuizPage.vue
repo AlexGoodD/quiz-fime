@@ -1,61 +1,64 @@
 <template>
   <div>
-    <Slider question="¿Cómo calificarías tu experiencia?" @update:sliderValue="handleSliderValue" />
-    <TrueFalse question="¿Es verdadero o falso?" @update:answer="handleTrueFalseAnswer" />
-    <MultOptions title="Selecciona una opción" :options="options" @update:selectedOption="handleSelectedOption" />
-    <button @click="submitAnswers">Submit Answers</button>
+    <div class="question-container">
+      <component
+        :is="getComponent(currentQuestion.type)"
+        :question="currentQuestion.question"
+        :options="currentQuestion.options"
+        v-model="answers[currentIndex]"
+        @update:modelValue="updateAnswer"
+      />
+    </div>
+    <div class="navigation-buttons">
+      <button @click="prevQuestion" :disabled="currentIndex === 0">Anterior</button>
+      <button v-if="currentIndex < questions.length - 1" @click="nextQuestion">Siguiente</button>
+      <button v-else @click="submitAnswers">Enviar Respuestas</button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextQuestion, prevQuestion, updateAnswer, submitAnswers, questions, currentIndex, currentQuestion, answers } from '../services/quizService';
 import Slider from '../components/SliderSelect.vue';
 import TrueFalse from '../components/TrueFalse.vue';
 import MultOptions from '../components/MultOptions.vue';
-import { submitAnswers as submitAnswersToFirestore } from '../services/submitService';
 
-const sliderValue = ref(1);
-const trueFalseAnswer = ref<boolean | null>(null);
-const selectedOption = ref<string | null>(null);
-const options = ref(['Opción 1', 'Opción 2', 'Opción 3']);
-
-function handleSliderValue(value: number) {
-sliderValue.value = value;
-}
-
-function handleTrueFalseAnswer(answer: boolean) {
-trueFalseAnswer.value = answer;
-}
-
-function handleSelectedOption(option: string) {
-selectedOption.value = option;
-}
-
-async function submitAnswers() {
-const answers = {
-  slider: {
-    question: '¿Cómo calificarías tu experiencia?',
-    answer: sliderValue.value,
-  },
-  trueFalse: {
-    question: '¿Es verdadero o falso?',
-    answer: trueFalseAnswer.value,
-  },
-  multipleChoice: {
-    question: 'Selecciona una opción',
-    answer: selectedOption.value,
-  },
-};
-
-try {
-  await submitAnswersToFirestore(answers);
-  console.log('Answers submitted successfully');
-} catch (error) {
-  console.error('Error submitting answers:', error);
-}
+function getComponent(type: string) {
+  switch (type) {
+    case 'slider':
+      return Slider;
+    case 'trueFalse':
+      return TrueFalse;
+    case 'multipleChoice':
+      return MultOptions;
+    default:
+      return null;
+  }
 }
 </script>
 
 <style scoped>
-
+.question-container {
+  background-color: #b3d9ff;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 </style>

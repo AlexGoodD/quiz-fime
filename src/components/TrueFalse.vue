@@ -1,38 +1,60 @@
 <template>
-    <div>
-        <h1>{{ props.question }}</h1>
-        <button @click="selectTrue" class="true">True</button>
-        <button @click="selectFalse" class="false">False</button>
-    </div>
+  <div>
+      <h1>{{ props.question }}</h1>
+      <button 
+          @click="updateValue(true)" 
+          :class="{ active: modelValue === true }" 
+          class="true"
+      >
+          True
+      </button>
+      <button 
+          @click="updateValue(false)" 
+          :class="{ active: modelValue === false }" 
+          class="false"
+      >
+          False
+      </button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 
+// Props y eventos
 const props = defineProps<{
-  question: string;
+question: string;
+modelValue: boolean | null; 
 }>();
 
-const emits = defineEmits(['update:answer']);
+const emits = defineEmits(['update:modelValue']);
 
-function selectTrue() {
-  emits('update:answer', true);
-  alert('True');
-}
-
-function selectFalse() {
-  emits('update:answer', false);
-  alert('False');
+// Función para actualizar el valor y emitirlo al padre
+function updateValue(value: boolean) {
+emits('update:modelValue', value);
 }
 </script>
 
 <style scoped>
 .true {
-  background-color: green;
+background-color: green;
+color: white;
+padding: 10px 20px;
+border: none;
+cursor: pointer;
+margin: 5px;
 }
 
 .false {
-  background-color: red;
+background-color: red;
+color: white;
+padding: 10px 20px;
+border: none;
+cursor: pointer;
+margin: 5px;
 }
 
+.active {
+border: 2px solid black;
+}
 </style>
