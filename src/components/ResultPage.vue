@@ -18,10 +18,15 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { getUserAnswers } from '../services/submitService';
+
 const userAnswers = ref<any[]>([]);
+const route = useRoute();
+
 onMounted(async () => {
   const answers = await getUserAnswers();
-  userAnswers.value = answers; 
+  userAnswers.value = answers.filter(answer => answer.id === route.params.id);
+  console.log(userAnswers.value);
 });
 </script>

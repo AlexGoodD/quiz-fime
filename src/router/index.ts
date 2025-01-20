@@ -2,7 +2,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import QuizView from '../views/QuizView.vue';
 import ResultPage from '../components/ResultPage.vue';
+import ResultView from '../views/ResultView.vue';
 import { auth } from '../firebase';
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -17,6 +19,12 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/result',
+    name: 'results',
+    component: ResultView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/result/:id',
     name: 'result',
     component: ResultPage,
     meta: { requiresAuth: true },
@@ -24,9 +32,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'about',
-    component: () => import( '../views/AboutView.vue'),
+    component: () => import('../views/AboutView.vue'),
   },
 ];
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
