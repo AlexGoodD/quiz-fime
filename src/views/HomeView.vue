@@ -1,59 +1,55 @@
 <template>
-  <div>
-    <div v-if="!isAuthenticated">
-      <div v-if="showLogin">
-        <LoginPage @loginSuccess="handleLoginSuccess" @switchToRegister="showRegisterPage" />
-      </div>
-      <div v-else>
-        <RegisterPage @registerSuccess="handleRegisterSuccess" @switchToLogin="showLoginPage" />
-      </div>
+    <div class="home-container">
+      <h1 class="title">Quiz de maestrías</h1>
+      <h3 class="subtitle">Responde las preguntas y descubre qué maestría es la ideal para ti</h3>
+      <button @click="startQuiz">Comenzar</button>
     </div>
-    <div v-else>
-      <router-view />
-    </div>
-  </div>
-</template>
+  </template>
+  
+  <script setup lang="ts">
+  import { useRouter } from 'vue-router';
+  const router = useRouter();
+  
+  function startQuiz() {
+    router.push('/quiz');
+  }
+  </script>
+  
+  <style scoped>
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    padding: 0 1rem;
+  }
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import LoginPage from '../components/LoginPage.vue';
-import RegisterPage from '../components/RegisterPage.vue';
-import { auth } from '../firebase';
+  .title {
+    font-size: 4.5rem;
+  }
 
-const isAuthenticated = ref(false);
-const showLogin = ref(true);
-const router = useRouter();
+  .subtitle {
+    font-size: 1rem;
+    margin-top: -40px;
+  }
+  
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #37763c;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 15rem;
+    transition: transform 0.5s ease;
+  }
+  
+  button:hover {
+    background-color: #326136;
+    transform: scale(0.9);
 
-onMounted(() => {
-  auth.onAuthStateChanged(user => {
-    isAuthenticated.value = !!user;
-    if (isAuthenticated.value) {
-      router.push('/quiz');
-    } else {
-      router.push('/');
-    }
-  });
-});
-
-function handleLoginSuccess() {
-  isAuthenticated.value = true;
-  router.push('/quiz');
-}
-
-function handleRegisterSuccess() {
-  isAuthenticated.value = true;
-  router.push('/quiz');
-}
-
-function showLoginPage() {
-  showLogin.value = true;
-}
-
-function showRegisterPage() {
-  showLogin.value = false;
-}
-</script>
-
-<style scoped>
-</style>
+  }
+  </style>
