@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import AuthView from '../views/AuthView.vue';
 import QuizView from '../views/QuizView.vue';
 import ResultPage from '../components/ResultPage.vue';
 import ResultView from '../views/ResultView.vue';
@@ -8,8 +9,13 @@ import { auth } from '../firebase';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: HomeView,
+  },
+  {
+    path: '/auth',
+    name: 'auth',
+    component: AuthView,
   },
   {
     path: '/quiz',
@@ -33,6 +39,8 @@ const routes: Array<RouteRecordRaw> = [
     path: '/about',
     name: 'about',
     component: () => import('../views/AboutView.vue'),
+    meta: { requiresAuth: true },
+
   },
 ];
 
@@ -46,7 +54,7 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = !!auth.currentUser;
 
   if (requiresAuth && !isAuthenticated) {
-    next('/');
+    next('/auth');
   } else {
     next();
   }
