@@ -12,7 +12,7 @@
     <div class="navigation-buttons">
       <button @click="prevQuestion" :disabled="currentIndex === 0">Anterior</button>
       <button v-if="currentIndex < questions.length - 1" @click="nextQuestion">Siguiente</button>
-      <button v-else @click="submitAnswers">Enviar Respuestas</button>
+      <button v-else @click="handleSubmitAnswers">Enviar Respuestas</button>
     </div>
   </div>
 </template>
@@ -22,6 +22,9 @@ import { nextQuestion, prevQuestion, updateAnswer, submitAnswers, questions, cur
 import Slider from '../components/SliderSelect.vue';
 import TrueFalse from '../components/TrueFalse.vue';
 import MultOptions from '../components/MultOptions.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 function getComponent(type: string) {
   switch (type) {
@@ -35,7 +38,12 @@ function getComponent(type: string) {
       return null;
   }
 }
+
+async function handleSubmitAnswers() {
+  await submitAnswers(router);
+}
 </script>
+
 
 <style scoped>
 .question-container {

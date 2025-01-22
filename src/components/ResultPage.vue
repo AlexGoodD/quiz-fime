@@ -2,11 +2,20 @@
   <div>
     <h1>Resultados</h1>
     <div v-if="userAnswers.length">
-      <div v-for="(userAnswer, index) in userAnswers" :key="index">
+      <div
+        v-for="(userAnswer, index) in userAnswers"
+        :key="index"
+        :ref="el => (userAnswerRefs[index] = el as HTMLElement)"
+      >
         <p><strong>Fecha de creación:</strong> {{ new Date(userAnswer.timestamp).toLocaleString() }}</p>
         <div v-for="(answer, idx) in userAnswer.answers" :key="idx">
           <h3>{{ answer.question || 'Pregunta no disponible' }}</h3>
           <p>{{ answer.answer || 'Respuesta no disponible' }}</p>
+        </div>
+        <div class="share-buttons">
+          <button @click="shareOnTwitter(index)">Compartir en Twitter</button>
+          <button @click="shareOnFacebook(index)">Compartir en Facebook</button>
+          <button @click="downloadImage(index)">Descargar Imagen</button>
         </div>
       </div>
     </div>
@@ -20,13 +29,61 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getUserAnswers } from '../services/submitService';
+import html2canvas from 'html2canvas';
 
 const userAnswers = ref<any[]>([]);
 const route = useRoute();
+const userAnswerRefs = ref<HTMLElement[]>([]);
 
 onMounted(async () => {
   const answers = await getUserAnswers();
   userAnswers.value = answers.filter(answer => answer.id === route.params.id);
   console.log(userAnswers.value);
 });
+
+async function captureImage(index: number) {
+  const element = userAnswerRefs.value[index];
+  const canvas = await html2canvas(element);
+  return canvas.toDataURL('image/png');
+}
+
+async function shareOnTwitter(index: number) {
+  const imageUrl = await captureImage(index);
+  const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(imageUrl)}`;
+  window.open(tweetUrl, '_blank');
+}
+
+async function shareOnFacebook(index: number) {
+  const imageUrl = await captureImage(index);
+  const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`;
+  window.open(fbUrl, '_blank');
+}
+
+async function downloadImage(index: number) {
+  const imageUrl = await captureImage(index);
+  const link = document.createElement('a');
+  link.href = imageUrl;
+  link.download = `respuesta_${index + 1}.png`;
+  link.click();
+}
 </script>
+
+<style scoped>
+.share-buttons {
+  margin-top: 10px;
+}
+
+.share-buttons button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.share-buttons button:hover {
+  background-color: #0056b3;
+}
+</style>
