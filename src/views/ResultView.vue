@@ -1,5 +1,4 @@
 <template>
-  <AppHeader />
   <div>
     <AdminResults v-if="isAdmin" />
     <ResultsQuiz v-else />
@@ -10,7 +9,6 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { subscribeToUserAuth } from '../services/adminService';
 import ResultsQuiz from '../components/ResultsQuiz.vue';
-import AppHeader from '../components/AppHeader.vue';
 import AdminResults from '../components/adminPage.vue';
 
 const isAdmin = ref(localStorage.getItem('isAdmin') === 'true');
