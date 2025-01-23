@@ -2,8 +2,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import AuthView from '../views/AuthView.vue';
 import QuizView from '../views/QuizView.vue';
-import ResultPage from '../components/ResultPage.vue';
+import AboutView from '../views/AboutView.vue';
 import ResultView from '../views/ResultView.vue';
+import ResultPage from '../components/ResultPage.vue';
+import ClosePage from '../components/ClosePage.vue';
 import { auth } from '../firebase';
 
 const routes: Array<RouteRecordRaw> = [
@@ -38,7 +40,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'about',
-    component: () => import('../views/AboutView.vue'),
+    component: AboutView,
+  },
+  {
+    path: '/close',
+    name: 'close',
+    component: ClosePage,
   },
 ];
 
@@ -49,13 +56,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = !!auth.currentUser;
 
-  if (requiresAuth && !isAuthenticated) {
-    next('/auth');
-  } else {
-    next();
-  }
+  auth.onAuthStateChanged(user => {
+    const isAuthenticated = !!user;
+
+    if (requiresAuth && !isAuthenticated) {
+      next('/auth');
+    } else {
+      next();
+    }
+  });
 });
 
 export default router;
