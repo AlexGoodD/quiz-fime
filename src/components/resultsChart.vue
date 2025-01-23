@@ -1,9 +1,11 @@
 <template>
   <div>
     <h2>Gráficas</h2>
+    <div class="chart-container">
     <div v-for="(question, index) in props.questions" :key="index">
       <h3>{{ question.question }}</h3>
       <PieChart :chart-data="getChartData(question)" />
+    </div>
     </div>
   </div>
 </template>
@@ -34,3 +36,14 @@ function getChartData(question: Question) {
   };
 }
 </script>
+
+<style scoped>
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+</style>

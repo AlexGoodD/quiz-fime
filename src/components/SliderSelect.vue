@@ -1,13 +1,15 @@
 <template>
   <div>
-      <h1>{{ question }}</h1>
-      <input type="range" :min="min" :max="max" v-model="sliderValue" @input="updateValue" />
-      <span>{{ sliderValue }}</span>
+    <h1>{{ question }}</h1>
+    <input type="range" :min="min" :max="max" v-model="sliderValue" @input="() => updateValue(emits)" />
+    <span>{{ sliderValue }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+import { useSliderQuestion } from '../services/questionService';
+
 const props = defineProps<{
   question: string;
   modelValue: number;
@@ -15,16 +17,8 @@ const props = defineProps<{
   max: number;
 }>();
 const emits = defineEmits(['update:modelValue']);
-const sliderValue = ref(props.modelValue || props.min);
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    sliderValue.value = newValue;
-  }
-);
-function updateValue() {
-  emits('update:modelValue', sliderValue.value);
-}
+
+const { sliderValue, updateValue } = useSliderQuestion(props);
 </script>
 
 <style scoped>

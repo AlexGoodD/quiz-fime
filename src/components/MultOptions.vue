@@ -1,52 +1,55 @@
 <template>
   <div>
     <h1>{{ question }}</h1>
-    <select v-model="selectedOption" @change="updateOption">
-      <option v-for="option in options" :key="option" :value="option">
+    <div class="options-container">
+      <div 
+        v-for="option in options" 
+        :key="option" 
+        :class="['option', { selected: option === selectedOption }]" 
+        @click="() => updateOption(option, emits)"
+      >
         {{ option }}
-      </option>
-    </select>
-    <div v-if="selectedOption">
-      <p>Opción seleccionada: {{ selectedOption }}</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+import { useMultipleChoiceQuestion } from '../services/questionService';
 
-// Props y eventos
 const props = defineProps<{
   question: string;
   options: string[];
   modelValue: string | null;
 }>();
-
 const emits = defineEmits(['update:modelValue']);
 
-// Valor local sincronizado con el valor del padre
-const selectedOption = ref<string | null>(props.modelValue);
-
-// Sincronizar el valor local si el padre lo actualiza
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    selectedOption.value = newValue;
-  }
-);
-
-// Emitir el cambio al padre
-function updateOption() {
-  emits('update:modelValue', selectedOption.value);
-}
+const { selectedOption, updateOption } = useMultipleChoiceQuestion(props);
 </script>
 
 <style scoped>
-select {
-  padding: 8px;
-  margin: 10px 0;
+.options-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.option {
+  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.option:hover {
+  transform: translateY(-5px);
+  background-color: #f8f8f8;
+}
+
+.option.selected {
+  border: 1px solid #737373;
 }
 </style>

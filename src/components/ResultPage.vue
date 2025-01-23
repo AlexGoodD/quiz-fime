@@ -16,6 +16,7 @@
           <button @click="() => shareOnTwitter(index, userAnswerRefs)">Compartir en Twitter</button>
           <button @click="() => shareOnFacebook(index, userAnswerRefs)">Compartir en Facebook</button>
           <button @click="() => downloadImage(index, userAnswerRefs)">Descargar Imagen</button>
+          <Social />
         </div>
       </div>
     </div>
@@ -31,6 +32,7 @@ import { useRoute } from 'vue-router';
 import { getUserAnswers } from '../services/submitService';
 import { shareOnTwitter, shareOnFacebook } from '../services/shareService';
 import { downloadImage } from '../services/canvasService';
+import Social from '../components/socialMedia.vue';
 
 const userAnswers = ref<any[]>([]);
 const route = useRoute();

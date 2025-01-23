@@ -1,60 +1,69 @@
 <template>
     <div>
-        <h1>{{ props.question }}</h1>
-        <button 
-            @click="updateValue('true')" 
-            :class="{ active: modelValue === 'true' }" 
-            class="true"
-        >
-            True
-        </button>
-        <button 
-            @click="updateValue('false')" 
-            :class="{ active: modelValue === 'false' }" 
-            class="false"
-        >
-            False
-        </button>
+      <h1>{{ props.question }}</h1>
+      <div class="buttons-trueFalse">
+      <button 
+        @click="() => updateValue('true', emits)" 
+        :class="{ active: modelValue === 'true' }" 
+        class="true"
+      >
+        True
+      </button>
+      <button 
+        @click="() => updateValue('false', emits)" 
+        :class="{ active: modelValue === 'false' }" 
+        class="false"
+      >
+        False
+      </button>
+    </div>
     </div>
   </template>
   
   <script setup lang="ts">
   import { defineProps, defineEmits } from 'vue';
+  import { useTrueFalseQuestion } from '../services/questionService';
   
-  // Props y eventos
   const props = defineProps<{
-  question: string;
-  modelValue: string | null; 
+    question: string;
+    modelValue: string | null;
   }>();
-  
   const emits = defineEmits(['update:modelValue']);
   
-  // Función para actualizar el valor y emitirlo al padre
-  function updateValue(value: string) {
-  emits('update:modelValue', value);
-  }
+  const { updateValue } = useTrueFalseQuestion(props);
   </script>
   
   <style scoped>
+  .buttons-trueFalse {
+    display: flex;
+    justify-content: center;
+  }
+
+  .true, .false {
+    color: black;
+    padding: 30px 20px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    background-color: transparent;
+    transition: all 0.5s ease;
+  }
+
+  .true:hover, .false:hover {
+    transform: translateY(-5px);
+  }
+
   .true {
-  background-color: green;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  margin: 5px;
+    border: 1px solid rgb(125, 200, 125);
+    
   }
   
   .false {
-  background-color: red;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  margin: 5px;
+    border: 1px solid rgb(202, 104, 104);
   }
   
   .active {
-  border: 2px solid black;
+    transform: translateY(-5px);
+    background-color: #f8f8f8;
   }
   </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="admin-container">
     <h1>Admin Dashboard</h1>
     
     <div v-if="isAdmin">
@@ -49,6 +49,15 @@ function toggleView() {
 </script>
 
 <style scoped>
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
 .toggle-button {
   position: absolute;
   right: 10px;

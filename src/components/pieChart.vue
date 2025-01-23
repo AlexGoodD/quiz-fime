@@ -61,8 +61,9 @@
   </script>
   
   <style scoped>
-  canvas {
-    max-width: 100%;
-    max-height: 400px;
-  }
+canvas {
+  max-height: 300px;
+  display: block;
+  margin: 0 auto;
+}
   </style>
