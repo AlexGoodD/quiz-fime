@@ -14,6 +14,9 @@
       <button v-if="currentIndex < questions.length - 1" @click="nextQuestion">Siguiente</button>
       <button v-else @click="handleSubmitAnswers">Enviar Respuestas</button>
     </div>
+    <div class="question-counter">
+      Pregunta {{ currentIndex + 1 }} de {{ questions.length }}
+    </div>
   </div>
 </template>
 

@@ -13,9 +13,9 @@
           <p>{{ answer.answer || 'Respuesta no disponible' }}</p>
         </div>
         <div class="share-buttons">
-          <button @click="shareOnTwitter(index)">Compartir en Twitter</button>
-          <button @click="shareOnFacebook(index)">Compartir en Facebook</button>
-          <button @click="downloadImage(index)">Descargar Imagen</button>
+          <button @click="() => shareOnTwitter(index, userAnswerRefs)">Compartir en Twitter</button>
+          <button @click="() => shareOnFacebook(index, userAnswerRefs)">Compartir en Facebook</button>
+          <button @click="() => downloadImage(index, userAnswerRefs)">Descargar Imagen</button>
         </div>
       </div>
     </div>
@@ -29,7 +29,8 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getUserAnswers } from '../services/submitService';
-import html2canvas from 'html2canvas';
+import { shareOnTwitter, shareOnFacebook } from '../services/shareService';
+import { downloadImage } from '../services/canvasService';
 
 const userAnswers = ref<any[]>([]);
 const route = useRoute();
@@ -40,32 +41,6 @@ onMounted(async () => {
   userAnswers.value = answers.filter(answer => answer.id === route.params.id);
   console.log(userAnswers.value);
 });
-
-async function captureImage(index: number) {
-  const element = userAnswerRefs.value[index];
-  const canvas = await html2canvas(element);
-  return canvas.toDataURL('image/png');
-}
-
-async function shareOnTwitter(index: number) {
-  const imageUrl = await captureImage(index);
-  const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(imageUrl)}`;
-  window.open(tweetUrl, '_blank');
-}
-
-async function shareOnFacebook(index: number) {
-  const imageUrl = await captureImage(index);
-  const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`;
-  window.open(fbUrl, '_blank');
-}
-
-async function downloadImage(index: number) {
-  const imageUrl = await captureImage(index);
-  const link = document.createElement('a');
-  link.href = imageUrl;
-  link.download = `respuesta_${index + 1}.png`;
-  link.click();
-}
 </script>
 
 <style scoped>

@@ -35,9 +35,10 @@ async function handleLogout() {
 </script>
 <style scoped>
 header {
-  background-color: #333;
+  background-color: transparent;
   color: white;
   padding: 10px 0;
+  border-bottom: 1px solid red;
 }
 nav ul {
   list-style: none;
@@ -50,13 +51,13 @@ nav ul li {
   margin: 0 10px;
 }
 nav ul li a {
-  color: white;
+  color: red;
   text-decoration: none;
 }
 nav ul li button {
   background: none;
   border: none;
-  color: white;
+  color: red;
   cursor: pointer;
   font-size: 16px;
 }
