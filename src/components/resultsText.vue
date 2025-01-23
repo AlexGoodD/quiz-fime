@@ -1,7 +1,7 @@
 <template>
     <div>
       <h2>Métricas</h2>
-      <p>Número total de personas: {{ totalUsers }}</p>
+      <p>Número total de personas: {{ props.totalUsers }}</p>
       <p>Número total de respuestas enviadas: {{ totalResponses }}</p>
       <div v-for="(question, index) in questions" :key="index">
         <h3>{{ question.question }}</h3>
