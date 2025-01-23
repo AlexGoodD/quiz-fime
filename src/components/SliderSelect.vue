@@ -1,7 +1,7 @@
 <template>
   <div>
       <h1>{{ question }}</h1>
-      <input type="range" min="1" max="5" v-model="sliderValue" @input="updateValue" />
+      <input type="range" :min="min" :max="max" v-model="sliderValue" @input="updateValue" />
       <span>{{ sliderValue }}</span>
   </div>
 </template>
@@ -9,19 +9,21 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, watch } from 'vue';
 const props = defineProps<{
-question: string;
-modelValue: number; 
+  question: string;
+  modelValue: number;
+  min: number;
+  max: number;
 }>();
 const emits = defineEmits(['update:modelValue']);
-const sliderValue = ref(props.modelValue || 1);
+const sliderValue = ref(props.modelValue || props.min);
 watch(
-() => props.modelValue,
-(newValue) => {
-  sliderValue.value = newValue;
-}
+  () => props.modelValue,
+  (newValue) => {
+    sliderValue.value = newValue;
+  }
 );
 function updateValue() {
-emits('update:modelValue', sliderValue.value);
+  emits('update:modelValue', sliderValue.value);
 }
 </script>
 

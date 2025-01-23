@@ -5,6 +5,8 @@
         :is="getComponent(currentQuestion.type)"
         :question="currentQuestion.question"
         :options="currentQuestion.options"
+        :min="currentQuestion.min"
+        :max="currentQuestion.max"
         v-model="answers[currentIndex]"
         @update:modelValue="updateAnswer"
       />
@@ -46,7 +48,6 @@ async function handleSubmitAnswers() {
   await submitAnswers(router);
 }
 </script>
-
 
 <style scoped>
 .question-container {
