@@ -58,7 +58,6 @@ function showRegisterPage() {
 }
 </script>
 
-// ...existing code...
 <style scoped>
 .centered-container {
   display: flex;

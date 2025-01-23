@@ -1,4 +1,5 @@
 <template>
+  <AppHeader />
   <div class="quiz-container">
     <Quiz />
   </div>
@@ -6,6 +7,7 @@
 
 <script setup lang="ts">
 import Quiz from '../components/QuizPage.vue';
+import AppHeader from '../components/AppHeader.vue';
 </script>
 
 <style scoped>

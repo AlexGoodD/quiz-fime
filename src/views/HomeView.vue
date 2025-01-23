@@ -3,6 +3,9 @@
       <h1 class="title">Quiz de maestrías</h1>
       <h3 class="subtitle">Responde las preguntas y descubre qué maestría es la ideal para ti</h3>
       <button @click="startQuiz">Comenzar</button>
+      <button @click="about" class="about-button">
+    <i class="fas fa-info"></i>
+  </button>
     </div>
   </template>
   
@@ -13,6 +16,11 @@
   function startQuiz() {
     router.push('/quiz');
   }
+
+  function about() {
+    router.push('/about');
+  }
+
   </script>
   
   <style scoped>
@@ -51,5 +59,21 @@
     background-color: #326136;
     transform: scale(0.9);
 
+  }
+
+  .about-button {
+    border-radius: 50%;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+    background-color: transparent;
+    border: 1px solid #326136;
+  }
+
+  .about-button:hover {
+    background-color: transparent;
+    transform: none;
   }
   </style>
