@@ -2,7 +2,7 @@
   <div :class="['close-container', { 'animate-background': animateBackground }]">
     <h1 class="title">Has finalizado el quiz</h1>
     <h3 class="subtitle">En breve saldrá tu resultado</h3>
-    <router-link v-if="showButton" to="/result" class="result-button">Ver mis resultados</router-link>
+    <router-link :class="['result-button', { 'show-button': showButton }]" to="/result">Ver mis resultados</router-link>
   </div>
 </template>
 
@@ -33,6 +33,7 @@ onMounted(() => {
   padding: 0 1rem;
   background: linear-gradient(to bottom, rgb(14, 14, 15) 0%, rgb(14, 14, 15) 50%, white 50%, white 100%);  background-size: 100% 200%;
   background-position: 0% 0%;
+  transition: all 0.5s ease;
 }
 
 .animate-background {
@@ -58,6 +59,7 @@ onMounted(() => {
   margin-top: -40px;
   color: white;
 }
+
 .result-button {
   margin-top: 20px;
   padding: 10px 20px;
@@ -68,7 +70,11 @@ onMounted(() => {
   text-decoration: none;
   text-align: center;
   display: inline-block;
-  transition: transform 0.5s ease;
+  opacity: 0;
+  transition: all 0.5s ease;}
+
+.show-button {
+  opacity: 1;
 }
 
 .result-button:hover {
