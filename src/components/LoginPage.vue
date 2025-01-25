@@ -12,7 +12,12 @@
       <label for="password">Contraseña</label>
       <div class="password-container">
         <i class="fas fa-lock" id="icon-der"></i>
-        <input v-model="password" :type="showPassword ? 'text' : 'password'" id="password" placeholder="Ingresa tu contraseña" />
+        <input
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          id="password"
+          placeholder="Ingresa tu contraseña"
+        />
         <button type="button" class="toggle-password" @click="togglePasswordVisibility">
           <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" id="icon-izq"></i>
         </button>
@@ -21,56 +26,59 @@
     <button @click="handleLogin">Iniciar sesión</button>
     <p>¿No tienes una cuenta? <a @click="switchToRegister">Regístrate</a></p>
     <div class="google-login">
-    <p>O inicia sesión con</p>
-    <button @click="handleGoogleLogin" class="google-login-button">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxS5iRASsr50ASJqYsyAvcew2ICajtSGVkJw&s" alt="Google Logo" />
-      Google
-    </button>
-  </div>
+      <p>O inicia sesión con</p>
+      <button @click="handleGoogleLogin" class="google-login-button">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxS5iRASsr50ASJqYsyAvcew2ICajtSGVkJw&s"
+          alt="Google Logo"
+        />
+        Google
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
-import { login, loginWithGoogle } from '../services/authService';
+import { ref, defineEmits } from "vue";
+import { login, loginWithGoogle } from "../services/authService";
 
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
 const showPassword = ref(false);
-const errorMessage = ref('');
-const emits = defineEmits(['loginSuccess', 'switchToRegister']);
+const errorMessage = ref("");
+const emits = defineEmits(["loginSuccess", "switchToRegister"]);
 
 function togglePasswordVisibility() {
   showPassword.value = !showPassword.value;
 }
 
 async function handleLogin() {
-  errorMessage.value = '';
+  errorMessage.value = "";
   try {
     await login(email.value, password.value);
-    emits('loginSuccess');
+    emits("loginSuccess");
   } catch (error) {
-    errorMessage.value = (error as any).message;
+    errorMessage.value = (error as Error).message;
   }
 }
 
 async function handleGoogleLogin() {
   try {
     await loginWithGoogle();
-    emits('loginSuccess');
+    emits("loginSuccess");
   } catch (error) {
-    errorMessage.value = 'Google login failed: ' + (error as any).message;
+    errorMessage.value = "Google login failed: " + (error as Error).message;
   }
 }
 
 function switchToRegister() {
-  emits('switchToRegister');
+  emits("switchToRegister");
 }
 </script>
 
 <style scoped>
-@import '@fortawesome/fontawesome-free/css/all.css';
-@import '../assets/auth.css';
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import "../assets/auth.css";
 
 .google-login {
   display: flex;
@@ -95,6 +103,4 @@ function switchToRegister() {
   height: 25px;
   margin-right: 5px;
 }
-
-
 </style>

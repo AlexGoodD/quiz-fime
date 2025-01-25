@@ -5,7 +5,12 @@
       <label for="registerEmail">Email</label>
       <div class="input-with-icon">
         <i class="fas fa-envelope"></i>
-        <input v-model="registerEmail" type="email" id="registerEmail" placeholder="Ingresa tu Email" />
+        <input
+          v-model="registerEmail"
+          type="email"
+          id="registerEmail"
+          placeholder="Ingresa tu Email"
+        />
       </div>
     </div>
     <div class="input-group">
@@ -18,8 +23,15 @@
           id="registerPassword"
           placeholder="Ingresa tu contraseña"
         />
-        <button type="button" class="toggle-password" @click="toggleRegisterPasswordVisibility">
-          <i :class="showRegisterPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" id="icon-izq"></i>
+        <button
+          type="button"
+          class="toggle-password"
+          @click="toggleRegisterPasswordVisibility"
+        >
+          <i
+            :class="showRegisterPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            id="icon-izq"
+          ></i>
         </button>
       </div>
     </div>
@@ -33,8 +45,15 @@
           id="confirmPassword"
           placeholder="Confirma tu contraseña"
         />
-        <button type="button" class="toggle-password" @click="toggleConfirmPasswordVisibility">
-          <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" id="icon-izq"></i>
+        <button
+          type="button"
+          class="toggle-password"
+          @click="toggleConfirmPasswordVisibility"
+        >
+          <i
+            :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            id="icon-izq"
+          ></i>
         </button>
       </div>
     </div>
@@ -44,16 +63,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
-import { register } from '../services/authService';
+import { ref, defineEmits } from "vue";
+import { register } from "../services/authService";
 
-const registerEmail = ref('');
-const registerPassword = ref('');
-const confirmPassword = ref('');
+const registerEmail = ref("");
+const registerPassword = ref("");
+const confirmPassword = ref("");
 const showRegisterPassword = ref(false);
 const showConfirmPassword = ref(false);
-const errorMessage = ref('');
-const emits = defineEmits(['registerSuccess', 'switchToLogin']);
+const errorMessage = ref("");
+const emits = defineEmits(["registerSuccess", "switchToLogin"]);
 
 function toggleRegisterPasswordVisibility() {
   showRegisterPassword.value = !showRegisterPassword.value;
@@ -64,26 +83,26 @@ function toggleConfirmPasswordVisibility() {
 }
 
 async function handleRegister() {
-  errorMessage.value = '';
+  errorMessage.value = "";
   if (registerPassword.value !== confirmPassword.value) {
-    errorMessage.value = 'Las contraseñas no coinciden.';
+    errorMessage.value = "Las contraseñas no coinciden.";
     return;
   }
   try {
     await register(registerEmail.value, registerPassword.value);
-    emits('registerSuccess');
-    emits('switchToLogin');
+    emits("registerSuccess");
+    emits("switchToLogin");
   } catch (error) {
-    errorMessage.value = (error as any).message;
+    errorMessage.value = error instanceof Error ? error.message : "Error desconocido";
   }
 }
 
 function switchToLogin() {
-  emits('switchToLogin');
+  emits("switchToLogin");
 }
 </script>
 
 <style scoped>
-@import '@fortawesome/fontawesome-free/css/all.css';
-@import '../assets/auth.css';
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import "../assets/auth.css";
 </style>
