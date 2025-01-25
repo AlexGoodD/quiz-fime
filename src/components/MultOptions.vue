@@ -2,10 +2,10 @@
   <div>
     <h1>{{ question }}</h1>
     <div class="options-container">
-      <div 
-        v-for="option in options" 
-        :key="option" 
-        :class="['option', { selected: option === selectedOption }]" 
+      <div
+        v-for="option in options"
+        :key="option"
+        :class="['option', { selected: option === selectedOption }]"
         @click="() => updateOption(option, emits)"
       >
         {{ option }}
@@ -15,15 +15,15 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
-import { useMultipleChoiceQuestion } from '../services/questionService';
+import { defineProps, defineEmits } from "vue";
+import { useMultipleChoiceQuestion } from "../services/questionService";
 
 const props = defineProps<{
   question: string;
   options: string[];
   modelValue: string | null;
 }>();
-const emits = defineEmits(['update:modelValue']);
+const emits = defineEmits(["update:modelValue"]);
 
 const { selectedOption, updateOption } = useMultipleChoiceQuestion(props);
 </script>
@@ -42,14 +42,15 @@ const { selectedOption, updateOption } = useMultipleChoiceQuestion(props);
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.5s ease;
+  background-color: white;
 }
 
 .option:hover {
   transform: translateY(-5px);
-  background-color: #f8f8f8;
 }
 
 .option.selected {
+  transform: scale(0.95);
   border: 1px solid #737373;
 }
 </style>
