@@ -1,13 +1,20 @@
 <template>
   <div class="admin-container">
-    <h1>Admin Dashboard</h1>
-    
+    <h1>Panel de control</h1>
+
     <div v-if="isAdmin">
-      <button @click="toggleView" class="toggle-button">
-      {{ showText ? 'Ver Gráficas' : 'Ver Métricas' }}
-    </button>
-      <ResultsText v-if="showText" :questions="questions" :totalUsers="totalUsers" :totalResponses="totalResponses" />
-      <ResultsChart v-else :questions="questions" />
+      <div class="download-button">
+        <button class="btn-dwn">Descargar resultados</button>
+      </div>
+      <div class="items-grid">
+        <itemAdmin title="Usuarios registrados" :result="totalUsers" />
+        <itemAdmin title="Formularios respondidos" :result="totalResponses" />
+        <itemChartAdmin
+          v-if="posgradosChartData"
+          title="Distribución de Posgrados"
+          :chartData="posgradosChartData"
+        />
+      </div>
     </div>
     <div v-else>
       <p>No tienes permisos para ver esta sección.</p>
@@ -16,15 +23,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { getMetrics, getQuestions } from '../services/adminService';
-import ResultsText from './resultsText.vue';
-import ResultsChart from './resultsChart.vue';
+import { ref, onMounted } from "vue";
+import {
+  getMetrics,
+  getQuestions,
+  getPosgradosWithCounts,
+} from "../services/adminService";
+import itemAdmin from "./itemAdmin.vue";
+import itemChartAdmin from "./itemChartAdmin.vue";
 
-const isAdmin = ref(localStorage.getItem('isAdmin') === 'true');
+const isAdmin = ref(localStorage.getItem("isAdmin") === "true");
 const totalUsers = ref(0);
 const totalResponses = ref(0);
-const showText = ref(true);
+const posgradosChartData = ref<{
+  labels: string[];
+  datasets: { data: number[]; backgroundColor: string[] }[];
+} | null>(null);
 
 interface Question {
   question: string;
@@ -39,13 +53,27 @@ onMounted(async () => {
     const metrics = await getMetrics();
     totalUsers.value = metrics.totalUsers;
     totalResponses.value = metrics.totalResponses;
-    questions.value = await getQuestions() as Question[];
+    questions.value = (await getQuestions()) as Question[];
+
+    const posgradosCount = await getPosgradosWithCounts();
+    posgradosChartData.value = {
+      labels: Object.keys(posgradosCount),
+      datasets: [
+        {
+          data: Object.values(posgradosCount),
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9F40",
+          ],
+        },
+      ],
+    };
   }
 });
-
-function toggleView() {
-  showText.value = !showText.value;
-}
 </script>
 
 <style scoped>
@@ -58,19 +86,34 @@ function toggleView() {
   height: 100%;
 }
 
-.toggle-button {
-  position: absolute;
-  right: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 10%;
+.items-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
-.toggle-button:hover {
-  background-color: #0056b3;
+@media (max-width: 760px) {
+  .items-grid {
+    flex-direction: column;
+  }
+}
+
+.download-button {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.btn-dwn {
+  width: 50%;
+}
+
+@media (max-width: 760px) {
+  .btn-dwn {
+    width: 100%;
+  }
 }
 </style>
