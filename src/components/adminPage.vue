@@ -101,12 +101,22 @@ onMounted(async () => {
   }
 }
 
-.download-button {
-  display: flex;
-  justify-content: center;
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #000000;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.5s ease;
   margin-bottom: 20px;
 }
 
+button:hover {
+  background-color: #3f3f3f;
+}
 .btn-dwn {
   width: 50%;
 }
