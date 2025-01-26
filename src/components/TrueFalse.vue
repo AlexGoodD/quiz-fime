@@ -43,8 +43,11 @@ const { updateValue } = useTrueFalseQuestion(props);
 .false {
   color: black;
   padding: 30px 20px;
+  width: 100%;
   border: none;
   cursor: pointer;
+  font-size: 16px;
+  border-radius: 10px;
   margin: 5px;
   background-color: transparent;
   transition: all 0.5s ease;
