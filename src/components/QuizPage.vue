@@ -15,19 +15,24 @@
 </template>
 
 <script setup lang="ts">
-import { nextQuestion, prevQuestion, updateAnswer, submitAnswers, questions, currentIndex, currentQuestion, answers } from '../services/quizService';
-import Slider from '../components/SliderSelect.vue';
-import TrueFalse from '../components/TrueFalse.vue';
-import MultOptions from '../components/MultOptions.vue';
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import {
+  updateAnswer,
+  currentIndex,
+  currentQuestion,
+  answers,
+  questions,
+} from "../services/quizService";
+import Slider from "../components/SliderSelect.vue";
+import TrueFalse from "../components/TrueFalse.vue";
+import MultOptions from "../components/MultOptions.vue";
+
 function getComponent(type: string) {
   switch (type) {
-    case 'slider':
+    case "slider":
       return Slider;
-    case 'trueFalse':
+    case "trueFalse":
       return TrueFalse;
-    case 'multipleChoice':
+    case "multipleChoice":
       return MultOptions;
     default:
       return null;
@@ -37,11 +42,16 @@ function getComponent(type: string) {
 
 <style scoped>
 .question-container {
-  border-radius: 10px;
-  width: 80vw; 
+  width: 80vw;
   height: 50vh;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-height: 500px) {
+  .question-container {
+    margin-bottom: 50px;
+  }
 }
 </style>
