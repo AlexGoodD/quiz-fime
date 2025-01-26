@@ -1,10 +1,11 @@
 <template>
   <div id="app">
+    <AdminMenu />
     <router-view />
   </div>
 </template>
 <script setup lang="ts">
-import AppHeader from './components/AppHeader.vue';
+import AdminMenu from "@/components/adminMenu.vue";
 </script>
 <style>
 #app {
@@ -13,6 +14,8 @@ import AppHeader from './components/AppHeader.vue';
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin: 0;
+  padding: 0;
 }
 nav {
   padding: 30px;
