@@ -57,7 +57,7 @@
         </button>
       </div>
     </div>
-    <button @click="handleRegister">Registrarse</button>
+    <button @click="handleRegister" class="submit-data">Registrarse</button>
     <p>¿Ya tienes una cuenta? <a @click="switchToLogin">Inicia sesión</a></p>
   </div>
 </template>

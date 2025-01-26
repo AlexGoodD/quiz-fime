@@ -23,7 +23,7 @@
         </button>
       </div>
     </div>
-    <button @click="handleLogin">Iniciar sesión</button>
+    <button @click="handleLogin" class="submit-data">Iniciar sesión</button>
     <p>¿No tienes una cuenta? <a @click="switchToRegister">Regístrate</a></p>
     <div class="google-login">
       <p>O inicia sesión con</p>
