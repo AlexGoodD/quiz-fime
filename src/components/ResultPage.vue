@@ -15,12 +15,15 @@
           <h3>{{ answer.question || "Pregunta no disponible" }}</h3>
           <p>{{ answer.answer || "Respuesta no disponible" }}</p>
         </div>
-        <p>La maestría indicada para ti puede ser {{ userAnswer.posgrado }}</p>
+        <p>
+          <strong>La maestría indicada para ti puede ser</strong>
+          {{ userAnswer.posgrado }}
+        </p>
         <div class="share-buttons">
           <button
             @click="
               shareOnTwitter(
-                '¡Mira mis resultados del quiz de maestrías!',
+                '¡Mira mis resultados del quiz de maestrías!: ',
                 userAnswer.posgrado || ''
               )
             "
@@ -77,10 +80,50 @@ onMounted(async () => {
 
 <style scoped>
 .share-buttons {
-  margin-top: 10px;
+  margin-top: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid red;
+  gap: 20px;
+}
+
+.share-buttons button {
+  padding: 10px 20px;
+  border: unset;
+  border-radius: 15px;
+  color: #212121;
+  z-index: 1;
+  background: #e8e8e8;
+  position: relative;
+  font-weight: 1000;
+  font-size: 13px;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: all 250ms;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.share-buttons button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 15px;
+  background-color: #212121;
+  z-index: -1;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: all 250ms;
+}
+
+.share-buttons button:hover {
+  color: #e8e8e8;
+}
+
+.share-buttons button:hover::before {
+  width: 100%;
 }
 </style>
