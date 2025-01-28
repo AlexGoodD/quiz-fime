@@ -1,24 +1,18 @@
-# quiz-maestrias
+# Quiz de maestrías
 
-## Project setup
-```
-npm install
-```
+## Enlace: quiz-maestrias.vercel.app (Proyecto sigue en desarrollo por lo que los resultados son solo de prueba)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Descripción del proyecto
+Este quiz es una aplicación web diseñada para ayudar a los usuarios a encontrar y explorar varios programas de posgrado en la facultad de ingeniería mecánica y eléctrica. Proporciona información detallada sobre diferentes programas de maestría, doctorado y especialidad.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Características
+- Autenticación de usuarios con Firebase
+- Enrutamiento dinámico con Vue Router
+- Diseño responsivo
+- Menú lateral interactivo
+- Información detallada sobre programas de posgrado
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Tecnologías utilizadas
+- Vue.js
+- Firebase
+- Vercel
