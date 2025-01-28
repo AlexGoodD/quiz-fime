@@ -7,18 +7,18 @@
         :key="index"
         :ref="el => (userAnswerRefs[index] = el as HTMLElement)"
       >
-        <p>
-          <strong>Fecha de creación:</strong>
-          {{ new Date(userAnswer.timestamp).toLocaleString() }}
-        </p>
+        <div class="results-date">
+          <h3>Fecha de creación:</h3>
+          <p>{{ new Date(userAnswer.timestamp).toLocaleString() }}</p>
+        </div>
         <div v-for="(answer, idx) in userAnswer.answers" :key="idx">
           <h3>{{ answer.question || "Pregunta no disponible" }}</h3>
           <p>{{ answer.answer || "Respuesta no disponible" }}</p>
         </div>
-        <p>
-          <strong>La maestría indicada para ti puede ser</strong>
-          {{ userAnswer.posgrado }}
-        </p>
+        <div class="results-posgrado">
+          <h3>La maestría indicada para ti puede ser:</h3>
+          <p>{{ userAnswer.posgrado || "Maestría no disponible" }}</p>
+        </div>
         <div class="share-buttons">
           <button
             @click="
@@ -79,6 +79,19 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.results-date,
+.results-posgrado {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.results-date p,
+.results-posgrado p {
+  margin-left: 5px;
+}
+
 .share-buttons {
   margin-top: 40px;
   display: flex;
