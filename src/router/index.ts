@@ -4,9 +4,10 @@ import AuthView from '../views/AuthView.vue';
 import QuizView from '../views/QuizView.vue';
 import ResultView from '../views/ResultView.vue';
 import AdminView from '../views/AdminView.vue';
-import ResultPage from '../components/ResultPage.vue';
-import ClosePage from '../components/ClosePage.vue';
-import { auth } from '../firebase';
+import ResultPage from '../components/pages/ResultPage.vue';
+import ClosePage from '../components/pages/ClosePage.vue';
+import { auth } from '@/firebase';
+import QuestionsView from "@/views/QuestionsView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -44,6 +45,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/admin/questions',
+    name: 'Admin questions',
+    component: QuestionsView,
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/close',
     name: 'close',
     component: ClosePage,
@@ -51,7 +58,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 
