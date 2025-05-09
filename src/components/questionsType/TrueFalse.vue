@@ -1,18 +1,18 @@
 <template>
   <div>
     <h1>{{ props.question }}</h1>
-    <div class="buttons-trueFalse">
+    <div class="tw-flex tw-justify-center">
       <button
         @click="() => updateValue('Verdadero', emits)"
-        :class="{ active: modelValue === 'Verdadero' }"
-        class="true"
+        :class="{ 'tw-transform tw-translate-y-1': modelValue === 'Verdadero' }"
+        class="tw-text-black tw-py-8 tw-px-6 tw-w-[100%] tw-cursor-pointer tw-text-base tw-rounded-xl tw-m-1 tw-bg-transparent tw-transition tw-duration-500 tw-border tw-border-[#7DC87DFF] hover:-tw-translate-y-1"
       >
         Verdadero
       </button>
       <button
         @click="() => updateValue('Falso', emits)"
-        :class="{ active: modelValue === 'Falso' }"
-        class="false"
+        :class="{ 'tw-transform tw-translate-y-1': modelValue === 'Falso' }"
+        class="tw-text-black tw-py-8 tw-px-6 tw-w-[100%] tw-cursor-pointer tw-text-base tw-rounded-xl tw-m-1 tw-bg-transparent tw-transition tw-duration-500 hover:-tw-translate-y-1 tw-border tw-border-[#CA6868]"
       >
         Falso
       </button>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTrueFalseQuestion } from "../../services/questionService";
+import { useTrueFalseQuestion } from "@/services/questionService";
 
 const props = defineProps<{
   question: string;
@@ -31,42 +31,3 @@ const emits = defineEmits(["update:modelValue"]);
 
 const { updateValue } = useTrueFalseQuestion(props);
 </script>
-
-<style scoped>
-.buttons-trueFalse {
-  display: flex;
-  justify-content: center;
-}
-
-.true,
-.false {
-  color: black;
-  padding: 30px 20px;
-  width: 100%;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 10px;
-  margin: 5px;
-  background-color: transparent;
-  transition: all 0.5s ease;
-}
-
-.true:hover,
-.false:hover {
-  transform: translateY(-5px);
-}
-
-.true {
-  border: 1px solid rgb(125, 200, 125);
-}
-
-.false {
-  border: 1px solid rgb(202, 104, 104);
-}
-
-.active {
-  transform: translateY(-5px);
-  background-color: #f8f8f8;
-}
-</style>

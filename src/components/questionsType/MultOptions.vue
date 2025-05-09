@@ -1,7 +1,21 @@
+<script setup lang="ts">
+import { useMultipleChoiceQuestion } from "@/services/questionService";
+
+const props = defineProps<{
+  question: string;
+  options: string[];
+  modelValue: string | null;
+}>();
+const emits = defineEmits(["update:modelValue"]);
+
+const { selectedOption, updateOption } = useMultipleChoiceQuestion(props);
+</script>
+
+
 <template>
-  <div>
-    <h1>{{ question }}</h1>
-    <div class="options-container">
+  <div class="tw-w-[50rem]">
+    <h1 class="tw-mb-4 tw-text-large tw-font-medium">{{ question }}</h1>
+    <div class="tw-flex tw-flex-col tw-flex-wrap tw-gap-3">
       <div
         v-for="option in options"
         :key="option"
@@ -14,27 +28,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useMultipleChoiceQuestion } from "../../services/questionService";
-
-const props = defineProps<{
-  question: string;
-  options: string[];
-  modelValue: string | null;
-}>();
-const emits = defineEmits(["update:modelValue"]);
-
-const { selectedOption, updateOption } = useMultipleChoiceQuestion(props);
-</script>
-
 <style scoped>
-.options-container {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
 .option {
   padding: 10px;
   border: 1px solid #ccc;
