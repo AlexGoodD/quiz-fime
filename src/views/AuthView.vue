@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-if="!isAuthenticated">
-      <div class="centered-container">
+      <div class="tw-flex tw-justify-center tw-items-center tw-h-[100vh]">
 
-    <div v-if="showLogin" class="login-register-form">
+    <div v-if="showLogin" class="tw-w-[100%] tw-p-5 tw-bg-white tw-rounded-lg">
         <LoginPage @loginSuccess="handleLoginSuccess" @switchToRegister="showRegisterPage" />
       </div>
-      <div v-else class="login-register-form">
+      <div v-else class="tw-w-[100%] tw-p-5 tw-bg-white tw-rounded-lg">
         <RegisterPage @registerSuccess="handleRegisterSuccess" @switchToLogin="showLoginPage" />
       </div>
     </div>
@@ -22,7 +22,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import LoginPage from '../components/pages/LoginPage.vue';
 import RegisterPage from '../components/pages/RegisterPage.vue';
-import { auth } from '../firebase';
+import { auth } from '@/firebase';
 
 const isAuthenticated = ref(false);
 const showLogin = ref(true);
@@ -57,20 +57,3 @@ function showRegisterPage() {
   showLogin.value = false;
 }
 </script>
-
-<style scoped>
-.centered-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.login-register-form {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-}
-</style>

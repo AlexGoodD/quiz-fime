@@ -1,32 +1,33 @@
 <template>
-  <div class="container">
-    <h2>Inicio de sesión</h2>
-    <div class="input-group">
-      <label for="email">Email</label>
-      <div class="input-with-icon">
-        <i class="fas fa-envelope"></i>
-        <input v-model="email" type="email" id="email" placeholder="Ingresa tu Email" />
+  <div class="tw-w-[30rem] tw-p-5 tw-mx-auto tw-my-0 tw-border tw-border-[#ccc] tw-rounded-md tw-shadow-md tw-text-center tw-justify-center">
+    <h2 class="tw-text-2xl tw-font-black">Inicio de sesión</h2>
+    <div class="tw-mb-4 tw-text-left"> <!--Input group-->
+      <label class="tw-block tw-mb-1 tw-text-base tw-text-[#333] tw-font-medium" for="email">Email</label> <!--Input group label -->
+      <div class="tw-relative"> <!--Input group > Input with icon-->
+        <i class="fas fa-envelope tw-absolute tw-left-3 tw-top-[50%] -tw-translate-y-[50%] tw-text-[#ccc]"></i> <!--Input group > Input with icon i-->
+        <input class="tw-w-[100%] tw-pr-2 tw-pt-2 tw-pb-2 tw-pl-8 tw-border tw-border-[#ccc] tw-rounded-md tw-text-base" v-model="email" type="email" id="email" placeholder="Ingresa tu Email" /> <!--Input group > Input with icon > input-->
       </div>
     </div>
-    <div class="input-group">
-      <label for="password">Contraseña</label>
-      <div class="password-container">
-        <i class="fas fa-lock" id="icon-der"></i>
+    <div class="tw-mb-4 tw-text-left"> <!--Input group-->
+      <label class="tw-block tw-mb-1 tw-text-base tw-text-[#333] tw-font-medium" for="password">Contraseña</label> <!--Input group label-->
+      <div class="tw-relative tw-flex tw-items-center"> <!--Password container-->
+        <i class="fas fa-lock tw-absolute tw-left-3 tw-top-[50%] -tw-translate-y-[50%] tw-text-[#ccc]"></i> <!--Icon der-->
         <input
           v-model="password"
           :type="showPassword ? 'text' : 'password'"
           id="password"
           placeholder="Ingresa tu contraseña"
-        />
-        <button type="button" class="toggle-password" @click="togglePasswordVisibility">
-          <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" id="icon-izq"></i>
-        </button>
+          class="tw-w-[100%] tw-pr-2 tw-pt-2 tw-pb-2 tw-pl-8 tw-border tw-border-[#ccc] tw-rounded-md tw-text-base"
+        /> <!--Password container > input-->
+        <button type="button" class="tw-absolute tw-right-5 tw-top-[50%] -tw-translate-y-[50%] tw-bg-transparent tw-border-none tw-cursor-pointer tw-text-[#666] tw-text-base tw-w-8 hover:tw-text-[#000]" @click="togglePasswordVisibility">
+          <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="tw-absolute tw-r-3 tw-top-[50%] -tw-translate-y-[50%] tw-text-[#ccc]"></i> <!-- Icon izq -->
+        </button> <!--Password container > toggle password/hover-->
       </div>
     </div>
-    <button @click="handleLogin" class="submit-data">Iniciar sesión</button>
-    <p>¿No tienes una cuenta? <a @click="switchToRegister">Regístrate</a></p>
+    <button @click="handleLogin" class="tw-w-[100%] tw-p-3 tw-mb-4 tw-border-none tw-bg-[#000000] tw-text-white tw-rounded-md tw-cursor-pointer tw-text-base tw-transition tw-transform tw-duration-500 tw-ease-in-out hover:tw-bg-[#3f3f3f]">Iniciar sesión</button> <!--Submit data/hover -->
+    <p class="tw-mb-4">¿No tienes una cuenta? <a class="tw-text-[#0014B3] tw-font-medium tw-cursor-pointer tw-transition-colors tw-duration-500 tw-ease-in-out hover:tw-text-[#4255FF]" @click="switchToRegister">Regístrate</a></p> <!-- a -->
     <div class="google-login">
-      <p>O inicia sesión con</p>
+      <p class="tw-mb-4">O inicia sesión con</p>
       <button @click="handleGoogleLogin" class="google-login-button">
         <img
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxS5iRASsr50ASJqYsyAvcew2ICajtSGVkJw&s"
@@ -40,7 +41,7 @@
 
 <script setup lang="ts">
 import { ref} from "vue";
-import { login, loginWithGoogle } from "../../services/authService";
+import { login, loginWithGoogle } from "@/services/authService";
 
 const email = ref("");
 const password = ref("");
@@ -78,7 +79,6 @@ function switchToRegister() {
 
 <style scoped>
 @import "../../../node_modules/@fortawesome/fontawesome-free/css/all.css";
-@import "../../assets/auth.css";
 
 .google-login {
   display: flex;
