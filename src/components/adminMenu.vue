@@ -95,7 +95,7 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<style >
 #sidebar a {
   padding: 8px;
   text-decoration: none;
