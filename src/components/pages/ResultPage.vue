@@ -52,8 +52,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { getUserAnswers } from "../services/submitService";
-import { shareOnTwitter, shareOnFacebook } from "../services/shareService";
+import { getUserAnswers } from "../../services/submitService";
+import { shareOnTwitter, shareOnFacebook } from "../../services/shareService";
 
 interface Answer {
   question: string;

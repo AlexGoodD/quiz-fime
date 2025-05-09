@@ -21,10 +21,10 @@ import {
   currentQuestion,
   answers,
   questions,
-} from "../services/quizService";
-import Slider from "../components/SliderSelect.vue";
-import TrueFalse from "../components/TrueFalse.vue";
-import MultOptions from "../components/MultOptions.vue";
+} from "../../services/quizService";
+import Slider from "../questionsType/SliderSelect.vue";
+import TrueFalse from "../questionsType/TrueFalse.vue";
+import MultOptions from "../questionsType/MultOptions.vue";
 
 function getComponent(type: string) {
   switch (type) {

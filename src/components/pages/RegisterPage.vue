@@ -63,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from "vue";
-import { register } from "../services/authService";
+import { ref } from "vue";
+import { register } from "../../services/authService";
 
 const registerEmail = ref("");
 const registerPassword = ref("");
@@ -103,6 +103,6 @@ function switchToLogin() {
 </script>
 
 <style scoped>
-@import "@fortawesome/fontawesome-free/css/all.css";
-@import "../assets/auth.css";
+@import "../../../node_modules/@fortawesome/fontawesome-free/css/all.css";
+@import "../../assets/auth.css";
 </style>

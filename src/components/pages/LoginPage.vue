@@ -39,8 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from "vue";
-import { login, loginWithGoogle } from "../services/authService";
+import { ref} from "vue";
+import { login, loginWithGoogle } from "../../services/authService";
 
 const email = ref("");
 const password = ref("");
@@ -77,8 +77,8 @@ function switchToRegister() {
 </script>
 
 <style scoped>
-@import "@fortawesome/fontawesome-free/css/all.css";
-@import "../assets/auth.css";
+@import "../../../node_modules/@fortawesome/fontawesome-free/css/all.css";
+@import "../../assets/auth.css";
 
 .google-login {
   display: flex;

@@ -20,8 +20,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import LoginPage from '../components/LoginPage.vue';
-import RegisterPage from '../components/RegisterPage.vue';
+import LoginPage from '../components/pages/LoginPage.vue';
+import RegisterPage from '../components/pages/RegisterPage.vue';
 import { auth } from '../firebase';
 
 const isAuthenticated = ref(false);

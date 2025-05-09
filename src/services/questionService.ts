@@ -1,4 +1,6 @@
 import { ref, watch } from 'vue';
+import { db } from '@/firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 export function useSliderQuestion(props: { modelValue: number; min: number }, emits: (event: 'update:modelValue', value: number) => void) {
     const sliderValue = ref(props.modelValue || props.min);
@@ -51,4 +53,21 @@ export function useMultipleChoiceQuestion(props: { modelValue: string | null }) 
     }
 
     return { selectedOption, updateOption };
+}
+
+export async function addQuestion(questionText: string, questionType: string): Promise<void> {
+    if (!questionText.trim()) {
+        throw new Error('Question text cannot be empty.');
+    }
+
+    try {
+        await addDoc(collection(db, 'questions'), {
+            text: questionText,
+            type: questionType,
+            timestamp: new Date().toISOString(),
+        });
+    } catch (error) {
+        console.error('Error adding question:', error);
+        throw error;
+    }
 }

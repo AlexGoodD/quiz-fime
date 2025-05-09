@@ -8,6 +8,12 @@
     </div>
     <Quiz />
     <div class="navigation-buttons">
+      <button v-if="currentIndex == 0" @click="prevQuestion" class="disabled-button">
+        Anterior
+      </button>
+      <button v-else @click="prevQuestion">
+        Anterior
+      </button>
       <button v-if="currentIndex < questions.length - 1" @click="nextQuestion">
         Siguiente
       </button>
@@ -17,13 +23,14 @@
 </template>
 
 <script setup lang="ts">
-import Quiz from "../components/QuizPage.vue";
+import Quiz from "../components/pages/QuizPage.vue";
 import {
   nextQuestion,
+  prevQuestion,
   submitAnswers,
   questions,
   currentIndex,
-} from "../services/quizService";
+} from "@/services/quizService";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
 const router = useRouter();
@@ -70,6 +77,12 @@ button:disabled {
   background-color: #212122;
   opacity: 0.5;
   cursor: not-allowed;
+}
+.disabled-button{
+  background-color: #212122;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 .question-counter {
   position: absolute;

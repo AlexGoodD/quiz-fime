@@ -15,10 +15,14 @@
           :chartData="posgradosChartData"
         />
       </div>
+      <router-link to="/admin/questions" title="Panel de control">
+        texto
+      </router-link>
     </div>
     <div v-else>
       <p>No tienes permisos para ver esta sección.</p>
     </div>
+
   </div>
 </template>
 
@@ -28,9 +32,10 @@ import {
   getMetrics,
   getQuestions,
   getPosgradosWithCounts,
-} from "../services/adminService";
-import itemAdmin from "./itemAdmin.vue";
-import itemChartAdmin from "./itemChartAdmin.vue";
+} from "@/services/adminService";
+import itemAdmin from "../itemAdmin.vue";
+import itemChartAdmin from "../charts/itemChartAdmin.vue";
+import {ChartPieIcon} from "@heroicons/vue/24/outline";
 
 const isAdmin = ref(localStorage.getItem("isAdmin") === "true");
 const totalUsers = ref(0);

@@ -15,8 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-import { useMultipleChoiceQuestion } from "../services/questionService";
+import { useMultipleChoiceQuestion } from "../../services/questionService";
 
 const props = defineProps<{
   question: string;

@@ -32,8 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-import { useSliderQuestion } from "../services/questionService";
+import { useSliderQuestion } from "../../services/questionService";
 
 const props = defineProps<{
   question: string;
