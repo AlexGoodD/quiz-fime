@@ -1,15 +1,15 @@
 <template>
   <div>
-    <h1>Resultados</h1>
-    <div class="results-container">
-      <div v-if="userAnswers.length" class="results-grid">
+    <h1 class="tw-text-4xl tw-mt-10 tw-font-bold tw-mb-10">Cuestionarios Respondidos</h1>
+    <div class="tw-w-[80%]">
+      <div v-if="userAnswers.length" class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] tw-gap4">
         <div
           v-for="(userAnswer, index) in userAnswers"
           :key="index"
-          class="result-card"
+          class="tw-p-4 tw-border tw-border-[#ccc] tw-rounded-lg tw-cursor-pointer tw-transition tw-duration-500 tw-w-40 tw-h-40 hover:tw-scale-105"
           @click="goToResultPage(userAnswer.id)"
         >
-          <p class="result-date">{{ new Date(userAnswer.timestamp).toLocaleString() }}</p>
+          <p class="tw-text-lg tw-font-bold">{{ new Date(userAnswer.timestamp).toLocaleString() }}</p>
         </div>
       </div>
       <div v-else>
@@ -41,32 +41,3 @@ function goToResultPage(id: string) {
   router.push(`/result/${id}`);
 }
 </script>
-
-<style scoped>
-.results-container {
-  width: 80%;
-}
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
-}
-.result-card {
-  padding: 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s;
-  width: 150px;
-  height: 150px;
-}
-
-.result-card:hover {
-  transform: scale(1.05);
-}
-
-.result-date {
-  font-size: 18px;
-  font-weight: bold;
-}
-</style>

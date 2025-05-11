@@ -1,5 +1,5 @@
 <template>
-  <div class="result-view">
+  <div class="tw-w-[100%] tw-my-0 tw-mx-auto tw-max-w-[1000px]" id="result-view">
     <ResultsQuiz />
   </div>
 </template>
@@ -8,15 +8,9 @@
 import ResultsQuiz from "@/components/ResultsQuiz.vue";
 </script>
 
-<style scoped>
-.result-view {
-  width: 100%;
-  margin: 0 auto;
-  max-width: 1000px;
-}
-
+<style>
 @media (max-width: 768px) {
-  .result-view {
+  #result-view {
     display: flex;
     align-items: center;
     flex-direction: column;

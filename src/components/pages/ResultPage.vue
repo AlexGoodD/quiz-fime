@@ -1,23 +1,23 @@
 <template>
   <div>
-    <h1>Resultados</h1>
+    <h1 class="tw-text-4xl tw-mt-10 tw-font-bold tw-mb-10">Resultados</h1>
     <div v-if="userAnswers.length">
       <div
         v-for="(userAnswer, index) in userAnswers"
         :key="index"
         :ref="el => (userAnswerRefs[index] = el as HTMLElement)"
       >
-        <div class="results-date">
+        <div class="tw-flex tw-justify-center tw-align-center tw-w-[100%]">
           <h3>Fecha de creación:</h3>
-          <p>{{ new Date(userAnswer.timestamp).toLocaleString() }}</p>
+          <p class="tw-ml-1">{{ new Date(userAnswer.timestamp).toLocaleString() }}</p>
         </div>
         <div v-for="(answer, idx) in userAnswer.answers" :key="idx">
           <h3>{{ answer.question || "Pregunta no disponible" }}</h3>
           <p>{{ answer.answer || "Respuesta no disponible" }}</p>
         </div>
-        <div class="results-posgrado">
+        <div class="tw-flex tw-justify-center tw-align-center tw-w-[100%]">
           <h3>La maestría indicada para ti puede ser:</h3>
-          <p>{{ userAnswer.posgrado || "Maestría no disponible" }}</p>
+          <p class="tw-ml-1">{{ userAnswer.posgrado || "Maestría no disponible" }}</p>
         </div>
         <div class="share-buttons">
           <button
@@ -79,19 +79,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.results-date,
-.results-posgrado {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.results-date p,
-.results-posgrado p {
-  margin-left: 5px;
-}
-
 .share-buttons {
   margin-top: 40px;
   display: flex;
