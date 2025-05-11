@@ -1,27 +1,3 @@
-<template>
-  <div class="quiz-container">
-    <div class="progress-bar-container">
-      <div class="progress-bar" :style="{ width: progress + '%' }"></div>
-    </div>
-    <div class="question-counter">
-      Pregunta {{ currentIndex + 1 }} de {{ questions.length }}
-    </div>
-    <Quiz />
-    <div class="navigation-buttons">
-      <button v-if="currentIndex == 0" @click="prevQuestion" class="disabled-button">
-        Anterior
-      </button>
-      <button v-else @click="prevQuestion">
-        Anterior
-      </button>
-      <button v-if="currentIndex < questions.length - 1" @click="nextQuestion">
-        Siguiente
-      </button>
-      <button v-else @click="handleSubmitAnswers">Enviar</button>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import Quiz from "../components/pages/QuizPage.vue";
 import {
@@ -35,70 +11,42 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 const router = useRouter();
 const progress = computed(
-  () => ((currentIndex.value + 1) / questions.value.length) * 100
+    () => ((currentIndex.value + 1) / questions.value.length) * 100
 );
 async function handleSubmitAnswers() {
   await submitAnswers(router);
 }
 </script>
 
-<style scoped>
-.quiz-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
-}
-.navigation-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 50px;
-}
-button {
-  height: 40px;
-  font-size: 15px;
-  width: 100%;
-  padding: 10px 20px;
-  border: none;
-  background-color: #212122;
-  color: white;
-  border-radius: 1rem;
-  cursor: pointer;
-  transition: transform 0.5s ease;
-}
-button:hover {
-  transform: scale(1.1);
-}
-button:disabled {
-  background-color: #212122;
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.disabled-button{
-  background-color: #212122;
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-.question-counter {
-  position: absolute;
-  top: 5rem;
-  right: 3rem;
-  font-size: 1.3rem;
-  font-weight: bold;
-}
-@media (max-width: 750px) {
-  .question-counter {
-    font-size: 1rem;
-    top: 1rem;
-    right: 1rem;
-  }
-}
+<template>
+  <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-[100vh]">
+    <div class="progress-bar-container">
+      <div class="progress-bar" :style="{ width: progress + '%' }"></div>
+    </div>
+    <div class="tw-absolute tw-top-[5rem] tw-right-12 tw-text-xl">
+      Pregunta {{ currentIndex + 1 }} de {{ questions.length }}
+    </div>
+    <Quiz />
+    <div class="tw-flex tw-justify-center tw-items-center tw-mt-5 tw-gap-12">
+      <button
+          v-if="currentIndex == 0"
+          @click="prevQuestion"
+          class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-bg-opacity-50 tw-rounded-2xl tw-cursor-none tw-pointer-events-none tw-transition tw-transform tw-duration-500 hover:tw-scale-110"
+      >
+        Anterior
+      </button>
+      <button class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110" v-else @click="prevQuestion">
+        Anterior
+      </button>
+      <button class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110" v-if="currentIndex < questions.length - 1" @click="nextQuestion">
+        Siguiente
+      </button>
+      <button class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110" v-else @click="handleSubmitAnswers">Enviar</button>
+    </div>
+  </div>
+</template>
 
+<style scoped>
 .progress-bar-container {
   display: block;
   justify-content: center;

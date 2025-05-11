@@ -1,6 +1,22 @@
+<script setup lang="ts">
+import { useSliderQuestion } from "@/services/questionService";
+
+const props = defineProps<{
+  question: string;
+  modelValue: number;
+  min: number;
+  max: number;
+}>();
+const emits = defineEmits<{
+  (event: "update:modelValue", value: number): void;
+}>();
+
+const { sliderValue, updateValue } = useSliderQuestion(props, emits);
+</script>
+
 <template>
   <div class="slider-container">
-    <h1>{{ question }}</h1>
+    <h1 class="tw-mb-4 tw-text-large tw-font-medium">{{ question }}</h1>
     <input
       type="range"
       :min="min"
@@ -30,22 +46,6 @@
     <div class="slider-value">{{ sliderValue }}</div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useSliderQuestion } from "../../services/questionService";
-
-const props = defineProps<{
-  question: string;
-  modelValue: number;
-  min: number;
-  max: number;
-}>();
-const emits = defineEmits<{
-  (event: "update:modelValue", value: number): void;
-}>();
-
-const { sliderValue, updateValue } = useSliderQuestion(props, emits);
-</script>
 
 <style scoped>
 .slider-container {
