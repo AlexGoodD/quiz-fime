@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { submitAnswers as submitAnswersToFirestore } from './submitService';
-import { questionsData } from '../assets/questions';
+import { questionsData } from '@/assets/questions';
 
 const questions = ref(questionsData);
 const currentIndex = ref(0);

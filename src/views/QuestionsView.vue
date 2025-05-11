@@ -1,9 +1,8 @@
 <template>
-  <h1>Gestión de cuestionario</h1>
-  <router-link to="/admin" title="Panel de control">
-    texto
-  </router-link>
-  <h2>Aqui encontrarás todas las preguntas que se encuentran en tu cuestionario.</h2>
+  <div class="tw-flex tw-justify-center">
+  <h1 class="tw-text-4xl tw-mt-10 tw-font-bold tw-mb-10">Cuestionario</h1>
+  </div>
+  <h2 class="tw-mb-10">Aqui encontrarás todas las preguntas que se encuentran en tu cuestionario.</h2>
   <questionItem/>
 </template>
 

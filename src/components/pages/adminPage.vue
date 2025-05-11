@@ -1,6 +1,6 @@
 <template>
   <div class="admin-container">
-    <h1>Panel de control</h1>
+    <h1 class="tw-text-4xl tw-mt-10 tw-font-bold tw-mb-10">Panel de control</h1>
 
     <div v-if="isAdmin">
       <div class="download-button">

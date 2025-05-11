@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-import { subscribeToUserAuth } from "../services/adminService";
+import { subscribeToUserAuth } from "@/services/adminService";
 import AdminResults from "../components/pages/adminPage.vue";
 
 const isAdmin = ref(localStorage.getItem("isAdmin") === "true");
