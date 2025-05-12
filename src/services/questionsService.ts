@@ -32,7 +32,7 @@ export async function fetchQuestions(): Promise<Question[]> {
         values: data.values ?? {},
       }
     }
-    
+
     if (data.type === 'trueFalse') {
       return {
         ...base,
@@ -43,11 +43,9 @@ export async function fetchQuestions(): Promise<Question[]> {
       }
     }
 
-    // fallback en caso de que venga un tipo desconocido
     return base
   })
 
-  // ordenar por posición antes de devolver
   return preguntas.sort((a, b) => a.position - b.position) as Question[]
 }
 

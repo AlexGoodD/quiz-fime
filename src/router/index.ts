@@ -1,14 +1,14 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import AuthView from '../views/AuthView.vue';
-import QuizView from '../views/QuizView.vue';
-import ResultView from '../views/ResultView.vue';
-import AdminView from '../views/AdminView.vue';
-import ResultPage from '../components/pages/ResultPage.vue';
-import ClosePage from '../components/pages/ClosePage.vue';
-import { auth } from '@/firebase';
-import QuestionsView from "@/views/QuestionsView.vue";
-import PostgradosView from "@/views/PostgradosView.vue";
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import AuthView from '../views/AuthView.vue'
+import QuizView from '../views/QuizView.vue'
+import ResultView from '../views/ResultView.vue'
+import AdminView from '../views/AdminView.vue'
+import ResultPage from '../components/pages/ResultPage.vue'
+import ClosePage from '../components/pages/ClosePage.vue'
+import { auth } from '@/firebase'
+import QuestionsView from '@/views/QuestionsView.vue'
+import PostgradosView from '@/views/PostgradosView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -62,52 +62,52 @@ const routes: Array<RouteRecordRaw> = [
     name: 'close',
     component: ClosePage,
   },
-];
+]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
+})
 
-let isAuthChecked = false;
+let isAuthChecked = false
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
   if (!isAuthChecked) {
-    auth.onAuthStateChanged(user => {
-      const isAuthenticated = !!user;
-      isAuthChecked = true;
+    auth.onAuthStateChanged((user) => {
+      const isAuthenticated = !!user
+      isAuthChecked = true
 
       if (requiresAuth && !isAuthenticated) {
-        next('/auth');
+        next('/auth')
       } else if (to.path === '/admin') {
-        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        const isAdmin = localStorage.getItem('isAdmin') === 'true'
         if (!isAdmin) {
-          next('/');
+          next('/')
         } else {
-          next();
+          next()
         }
       } else {
-        next();
+        next()
       }
-    });
+    })
   } else {
-    const isAuthenticated = !!auth.currentUser;
+    const isAuthenticated = !!auth.currentUser
 
     if (requiresAuth && !isAuthenticated) {
-      next('/auth');
+      next('/auth')
     } else if (to.path === '/admin') {
-      const isAdmin = localStorage.getItem('isAdmin') === 'true';
+      const isAdmin = localStorage.getItem('isAdmin') === 'true'
       if (!isAdmin) {
-        next('/');
+        next('/')
       } else {
-        next();
+        next()
       }
     } else {
-      next();
+      next()
     }
   }
-});
+})
 
-export default router;
+export default router

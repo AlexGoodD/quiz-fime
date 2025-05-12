@@ -15,7 +15,7 @@ export async function fetchPostgrados(): Promise<PostgradoType[]> {
 export async function savePostgrado(postgrado: PostgradoType): Promise<void> {
   const { id, ...data } = postgrado
   if (id) {
-    const ref = doc(db, 'postgrados', id)
+    const ref = doc(db, 'posgrados', id)
     await updateDoc(ref, data)
   } else {
     await addDoc(posgradosCollection, data)

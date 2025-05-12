@@ -1,35 +1,37 @@
 <script setup lang="ts">
-  import { updateAnswer, currentIndex, currentQuestion, answers } from '@/services/quizService'
-  import Slider from '@/components/questions/SliderSelect.vue'
-  import TrueFalse from '@/components/questions/TrueFalse.vue'
-  import MultOptions from '@/components/questions/MultOptions.vue'
+  import { currentQuestion, updateAnswer, answers } from '@/services/quizService'
 
-  function getComponent(type: string) {
-    switch (type) {
-      case 'slider':
-        return Slider
-      case 'trueFalse':
-        return TrueFalse
-      case 'multipleChoice':
-        return MultOptions
-      default:
-        return null
-    }
-  }
+  import MultipleChoiceDisplay from '@/components/questionComponents/MultipleChoice.vue'
+  import SliderDisplay from '@/components/questionComponents/SliderSelect.vue'
+  import TrueFalseDisplay from '@/components/questionComponents/TrueFalse.vue'
 </script>
 
 <template>
   <div>
     <div class="tw-h-[50vh] tw-flex tw-justify-center tw-items-center tw-w-[50rem]">
-      <component
-        :is="getComponent(currentQuestion.type)"
-        :question="currentQuestion.question"
-        :options="currentQuestion.options"
-        :min="currentQuestion.min"
-        :max="currentQuestion.max"
-        v-model="answers[currentIndex]"
-        @update:modelValue="updateAnswer"
-      />
+      <div
+        v-if="currentQuestion"
+        class="tw-h-[50vh] tw-flex tw-justify-center tw-items-center tw-w-[50rem]"
+      >
+        <MultipleChoiceDisplay
+          v-if="currentQuestion.type === 'multipleChoice'"
+          :question="currentQuestion"
+          :selected="answers[currentQuestion.position]"
+          @select="updateAnswer"
+        />
+        <SliderDisplay
+          v-if="currentQuestion.type === 'slider'"
+          :question="currentQuestion.question"
+          :min="currentQuestion.min"
+          :max="currentQuestion.max"
+          :modelValue="answers[currentQuestion.position] as number"
+        />
+        <TrueFalseDisplay
+          v-if="currentQuestion.type === 'trueFalse'"
+          :question="currentQuestion.question"
+          :modelValue="answers[currentQuestion.position] as string"
+        />
+      </div>
     </div>
   </div>
 </template>

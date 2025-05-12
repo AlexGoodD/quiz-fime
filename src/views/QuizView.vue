@@ -1,63 +1,90 @@
 <script setup lang="ts">
+  import { onMounted, computed, ref } from 'vue'
   import Quiz from '../components/pages/QuizPage.vue'
   import {
     nextQuestion,
     prevQuestion,
-    submitAnswers,
-    questions,
+    loadQuestions,
     currentIndex,
+    questions,
+    answers,
   } from '@/services/quizService'
-  import { useRouter } from 'vue-router'
-  import { computed } from 'vue'
+  import { submitAnswers } from '@/services/submitService'
 
-  const router = useRouter()
-  const progress = computed(() => ((currentIndex.value + 1) / questions.value.length) * 100)
+  const loading = ref(true)
+
+  const progress = computed(() => {
+    return questions.value.length ? ((currentIndex.value + 1) / questions.value.length) * 100 : 0
+  })
 
   async function handleSubmitAnswers() {
-    await submitAnswers(router)
+    try {
+      const formattedAnswers = questions.value.map((q, index) => ({
+        question: q.question,
+        answer: answers.value[index],
+      }))
+      await submitAnswers(formattedAnswers)
+      alert('Respuestas enviadas con éxito')
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      alert('Error al enviar las respuestas')
+    }
   }
+
+  onMounted(async () => {
+    await loadQuestions()
+    loading.value = false
+  })
 </script>
 
 <template>
-  <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-[100vh]">
+  <div
+    class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-[100vh]"
+    v-if="!loading && questions.length"
+  >
     <div class="progress-bar-container">
       <div class="progress-bar" :style="{ width: progress + '%' }"></div>
     </div>
+
     <div class="tw-absolute tw-top-[5rem] tw-right-12 tw-text-xl">
       Pregunta {{ currentIndex + 1 }} de {{ questions.length }}
     </div>
+
     <Quiz />
+
     <div class="tw-flex tw-justify-center tw-items-center tw-mt-5 tw-gap-12">
       <button
-        v-if="currentIndex == 0"
         @click="prevQuestion"
-        class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-bg-opacity-50 tw-rounded-2xl tw-cursor-none tw-pointer-events-none tw-transition tw-transform tw-duration-500 hover:tw-scale-110"
+        :disabled="currentIndex === 0"
+        class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-rounded-2xl tw-transition tw-transform tw-duration-500"
+        :class="
+          currentIndex === 0
+            ? 'tw-bg-[#212122] tw-text-white tw-bg-opacity-50 tw-cursor-none tw-pointer-events-none'
+            : 'tw-bg-[#212122] tw-text-white hover:tw-scale-110'
+        "
       >
         Anterior
       </button>
+
       <button
-        class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110"
-        v-else
-        @click="prevQuestion"
-      >
-        Anterior
-      </button>
-      <button
-        class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110"
         v-if="currentIndex < questions.length - 1"
         @click="nextQuestion"
+        class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110"
       >
         Siguiente
       </button>
+
       <button
-        class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110"
         v-else
         @click="handleSubmitAnswers"
+        class="tw-flex tw-items-center tw-justify-center tw-h-10 tw-text-base tw-w-[100%] tw-px-5 tw-border-none tw-bg-[#212122] tw-text-white tw-rounded-2xl tw-transition tw-transform tw-duration-500 hover:tw-scale-110"
       >
         Enviar
       </button>
     </div>
   </div>
+
+  <div v-else class="tw-text-xl tw-font-semibold tw-animate-pulse">Cargando preguntas...</div>
 </template>
 
 <style scoped>
