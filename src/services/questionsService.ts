@@ -25,22 +25,20 @@ export async function fetchQuestions(): Promise<Question[]> {
         sliderLogics: Array.isArray(data.sliderLogics) ? data.sliderLogics : [],
       }
     }
-    /*
-        if (data.type === 'multipleChoice') {
-          return {
-            ...base,
-            options: data.options ?? [],
-            values: data.values ?? {},
-          }
-        }
-
-        if (data.type === 'trueFalse') {
-          return {
-            ...base,
-            trueValue: data.trueValue ?? null,
-            falseValue: data.falseValue ?? null,
-          }
-        }*/
+    if (data.type === 'multipleChoice') {
+      return {
+        ...base,
+        options: data.options ?? [],
+        values: data.values ?? {},
+      }
+    }
+    if (data.type === 'trueFalse') {
+      return {
+        ...base,
+        trueValue: data.trueValue ?? null,
+        falseValue: data.falseValue ?? null,
+      }
+    }
 
     // fallback en caso de que venga un tipo desconocido
     return base
@@ -74,14 +72,14 @@ export async function saveQuestions(questions: Question[]) {
       data.sliderLogics = q.sliderLogics
     }
 
-    /* if (q.type === 'multipleChoice') {
-       data.options = q.options ?? []
-       data.values = q.values ?? {}
-     }
-
-     if (q.type === 'trueFalse') {
-       data.values = q.values ?? { Verdadero: {}, Falso: {} }
-     }*/
+    if (q.type === 'multipleChoice') {
+      data.options = q.options ?? []
+      data.values = q.values ?? {}
+    }
+    /*
+         if (q.type === 'trueFalse') {
+           data.values = q.values ?? { Verdadero: {}, Falso: {} }
+         }*/
 
     if (q.id) {
       return setDoc(doc(db, 'questions', q.id), data)

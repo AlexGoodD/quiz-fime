@@ -55,10 +55,12 @@
         <div v-else-if="questionType === 'multipleChoice'" class="tw-flex tw-flex-col tw-gap-2">
           <label class="tw-font-bold">Opciones</label>
           <MultipleChoiceOption
-            v-for="(opt, i) in options"
+            v-for="(opt, i) in multipleOptions"
             :key="i"
             :areas="areasDisponibles"
+            :model-value="opt"
             @update="updateOption(i, $event)"
+            @delete="removeOption(i)"
           />
           <button @click="addOption" class="tw-text-blue-600 hover:tw-underline tw-w-fit tw-mt-2">
             + Añadir opción
@@ -84,11 +86,11 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watch, computed } from 'vue'
+  import { ref, watch, computed, onMounted } from 'vue'
   import MultipleChoiceOption from '@/components/questionsCreate/multipleChoice.vue'
   import SliderSelect from '@/components/questionsCreate/sliderSelect.vue'
   import TrueFalse from '@/components/questionsCreate/trueFalse.vue'
-  import { Question } from '@/types/QuestionsType'
+  import { MultipleChoiceQuestion, Question } from '@/types/QuestionsType'
 
   // Props recibidas del padre
   const props = defineProps<{
@@ -109,7 +111,8 @@
 
   // Otras variables locales
   const showDetails = ref(false)
-  const options = ref<Array<any>>([])
+
+  const multipleOptions = ref<Array<{ option: string; areaPoints: Record<string, number> }>>([])
   const trueFalseConfig = ref({})
 
   // Computed para detectar si es una pregunta slider y para estrechar su tipado
@@ -126,14 +129,35 @@
       if (JSON.stringify(nuevo) !== JSON.stringify(questionData.value)) {
         questionData.value = { ...nuevo }
         questionType.value = nuevo.type
+
+        // 👇 Llama a la inicialización si es multipleChoice
+        if (nuevo.type === 'multipleChoice') {
+          initializeMultipleChoice()
+        }
       }
     },
     { deep: true }
   )
 
+  function initializeMultipleChoice() {
+    const mcq = questionData.value as MultipleChoiceQuestion
+
+    if (!mcq.options) mcq.options = []
+    if (!mcq.values) mcq.values = {}
+
+    multipleOptions.value = mcq.options.map((option) => ({
+      option,
+      areaPoints: mcq.values[option] ?? {},
+    }))
+  }
+
   // Cuando se modifique el select de tipo, actualiza el campo en questionData
   watch(questionType, (nuevoTipo) => {
     questionData.value.type = nuevoTipo
+
+    if (nuevoTipo === 'multipleChoice') {
+      initializeMultipleChoice()
+    }
   })
 
   // Emite cambios al componente padre de forma diferida (debounce) para evitar loops infinitos
@@ -167,15 +191,45 @@
     }
   }
 
-  // Función para agregar una opción en preguntas de selección múltiple
   function addOption() {
-    options.value.push({})
+    multipleOptions.value.push({ option: '', areaPoints: {} })
+    syncMultipleChoice()
   }
 
-  // Función para actualizar una opción en preguntas de selección múltiple
-  function updateOption(index: number, data: { option: string; area: string; points: number }) {
-    options.value[index] = data
+  function updateOption(
+    index: number,
+    data: { option: string; areaPoints: Record<string, number> }
+  ) {
+    multipleOptions.value[index] = data
+    syncMultipleChoice()
   }
+
+  function removeOption(index: number) {
+    multipleOptions.value.splice(index, 1)
+    syncMultipleChoice()
+  }
+
+  function syncMultipleChoice() {
+    const options: string[] = []
+    const values: MultipleChoiceQuestion['values'] = {}
+
+    for (const opt of multipleOptions.value) {
+      if (opt.option) {
+        options.push(opt.option)
+        values[opt.option] = opt.areaPoints
+      }
+    }
+
+    const mcq = questionData.value as MultipleChoiceQuestion
+    mcq.options = options
+    mcq.values = values
+  }
+
+  onMounted(() => {
+    if (questionType.value === 'multipleChoice') {
+      initializeMultipleChoice()
+    }
+  })
 </script>
 
 <style scoped>
