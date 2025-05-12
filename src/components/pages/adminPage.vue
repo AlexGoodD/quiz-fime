@@ -1,12 +1,16 @@
 <template>
-  <div class="admin-container">
+  <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-[100%] tw-h-[100%]">
     <h1 class="tw-text-4xl tw-mt-10 tw-font-bold tw-mb-10">Panel de control</h1>
 
     <div v-if="isAdmin">
-      <div class="download-button">
-        <button class="btn-dwn">Descargar resultados</button>
+      <div class="tw-flex tw-justify-center">
+        <button
+          class="tw-flex tw-items-center tw-justify-center tw-w-[20rem] tw-h-[3rem] tw-p-4 tw-border-none tw-bg-black tw-text-white tw-rounded-md tw-cursor-pointer tw-text-lg tw-transition-colors tw-mb-5 tw-duration-500 hover:tw-bg-[#3f3f3f]"
+        >
+          Descargar resultados
+        </button>
       </div>
-      <div class="items-grid">
+      <div class="tw-flex tw-flex-grid tw-items-center tw-justify-center tw-w-[100%] tw-h-[100%]">
         <AdminItem title="Usuarios registrados" :result="totalUsers" />
         <AdminItem title="Formularios respondidos" :result="totalResponses" />
         <ChartAdmin
@@ -66,56 +70,3 @@
     }
   })
 </script>
-
-<style scoped>
-  .admin-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-  }
-
-  .items-grid {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-  }
-
-  @media (max-width: 760px) {
-    .items-grid {
-      flex-direction: column;
-    }
-  }
-
-  button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background-color: #000000;
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.5s ease;
-    margin-bottom: 20px;
-  }
-
-  button:hover {
-    background-color: #3f3f3f;
-  }
-
-  .btn-dwn {
-    width: 50%;
-  }
-
-  @media (max-width: 760px) {
-    .btn-dwn {
-      width: 100%;
-    }
-  }
-</style>
