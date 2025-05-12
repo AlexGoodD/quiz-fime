@@ -32,11 +32,14 @@ export async function fetchQuestions(): Promise<Question[]> {
         values: data.values ?? {},
       }
     }
+    
     if (data.type === 'trueFalse') {
       return {
         ...base,
-        trueValue: data.trueValue ?? null,
-        falseValue: data.falseValue ?? null,
+        values: data.values ?? {
+          Verdadero: {},
+          Falso: {},
+        },
       }
     }
 
@@ -76,10 +79,9 @@ export async function saveQuestions(questions: Question[]) {
       data.options = q.options ?? []
       data.values = q.values ?? {}
     }
-    /*
-         if (q.type === 'trueFalse') {
-           data.values = q.values ?? { Verdadero: {}, Falso: {} }
-         }*/
+    if (q.type === 'trueFalse') {
+      data.values = q.values ?? { Verdadero: {}, Falso: {} }
+    }
 
     if (q.id) {
       return setDoc(doc(db, 'questions', q.id), data)

@@ -69,7 +69,11 @@
 
         <div v-else-if="questionType === 'trueFalse'" class="tw-flex tw-flex-col tw-gap-2">
           <label class="tw-font-bold">Asignación de puntos</label>
-          <TrueFalse :areas="areasDisponibles" @update="trueFalseConfig = $event" />
+          <TrueFalse
+            :areas="areasDisponibles"
+            :model-value="trueFalseConfig ?? { Verdadero: {}, Falso: {} }"
+            @update="updateTrueFalse"
+          />
         </div>
       </div>
     </transition>
@@ -155,6 +159,13 @@
   watch(questionType, (nuevoTipo) => {
     questionData.value.type = nuevoTipo
 
+    if (nuevoTipo === 'trueFalse') {
+      const tfq = questionData.value as Extract<Question, { type: 'trueFalse' }>
+      if (!tfq.values) {
+        tfq.values = { Verdadero: {}, Falso: {} }
+      }
+    }
+
     if (nuevoTipo === 'multipleChoice') {
       initializeMultipleChoice()
     }
@@ -225,9 +236,25 @@
     mcq.values = values
   }
 
+  function updateTrueFalse(data: {
+    Verdadero: { [area: string]: number }
+    Falso: { [area: string]: number }
+  }) {
+    trueFalseConfig.value = data
+    if (questionData.value.type === 'trueFalse') {
+      ;(questionData.value as Extract<Question, { type: 'trueFalse' }>).values = data
+    }
+  }
+
   onMounted(() => {
     if (questionType.value === 'multipleChoice') {
       initializeMultipleChoice()
+    }
+
+    if (questionType.value === 'trueFalse') {
+      console.log('Valores al montar ', questionData.value)
+      const tfq = questionData.value as Extract<Question, { type: 'trueFalse' }>
+      trueFalseConfig.value = tfq.values ?? { Verdadero: {}, Falso: {} }
     }
   })
 </script>
