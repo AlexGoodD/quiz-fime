@@ -1,5 +1,5 @@
 import { auth, db } from '../firebase'
-import { AnswerType, Answer, UserAnswer } from '@/types/Answer'
+import { Answer, UserAnswer } from '@/types/Answer'
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import { AreaPoints } from '@/types/AreasType'
 import type { Question } from '@/types/QuestionsType'
