@@ -1,5 +1,5 @@
 import { auth, db } from '../firebase'
-import { AnswerType, Answer } from '@/types/Answer'
+import { AnswerType, Answer, UserAnswer } from '@/types/Answer'
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import { AreaPoints } from '@/types/AreasType'
 import type { Question } from '@/types/QuestionsType'
@@ -25,25 +25,22 @@ export async function submitAnswers(answers: Answer[]) {
   }
 }
 
-export async function getUserAnswers(): Promise<AnswerType[]> {
-  try {
-    const user = auth.currentUser
-    if (!user) throw new Error('Usuario no autenticado')
-    const q = query(collection(db, 'answers'), where('userId', '==', user.uid))
-    const querySnapshot = await getDocs(q)
-    return querySnapshot.docs.map((doc) => {
-      const data = doc.data()
-      return {
-        id: doc.id,
-        timestamp: data.timestamp,
-        answers: data.answers,
-        posgrado: data.posgrado,
-      }
-    })
-  } catch (error) {
-    console.error('Error obteniendo respuestas:', error)
-    throw error
-  }
+export async function getUserAnswers(): Promise<UserAnswer[]> {
+  const user = auth.currentUser
+  if (!user) throw new Error('Usuario no autenticado')
+
+  const q = query(collection(db, 'answers'), where('userId', '==', user.uid))
+  const querySnapshot = await getDocs(q)
+
+  return querySnapshot.docs.map((doc) => {
+    const data = doc.data()
+    return {
+      id: doc.id,
+      timestamp: data.timestamp,
+      answers: data.answers,
+      posgrado: data.posgrado,
+    } as UserAnswer
+  })
 }
 
 export async function calculatePosgradoFromFirestore(answers: Answer[]): Promise<string> {

@@ -28,9 +28,9 @@
   import { onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { getUserAnswers } from '@/services/submitService'
-  import { AnswerType } from '@/types/Answer'
+  import { UserAnswer } from '@/types/Answer'
 
-  const userAnswers = ref<AnswerType[]>([])
+  const userAnswers = ref<UserAnswer[]>([])
   const router = useRouter()
 
   onMounted(async () => {
