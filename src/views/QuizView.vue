@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted, computed, ref } from 'vue'
-  import Quiz from '../components/pages/QuizPage.vue'
+  import QuizPage from '../components/pages/quizPage.vue'
   import {
     nextQuestion,
     prevQuestion,
@@ -50,7 +50,7 @@
       Pregunta {{ currentIndex + 1 }} de {{ questions.length }}
     </div>
 
-    <Quiz />
+    <QuizPage />
 
     <div class="tw-flex tw-justify-center tw-items-center tw-mt-5 tw-gap-12">
       <button

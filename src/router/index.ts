@@ -4,11 +4,11 @@ import AuthView from '../views/AuthView.vue'
 import QuizView from '../views/QuizView.vue'
 import ResultView from '../views/ResultView.vue'
 import AdminView from '../views/AdminView.vue'
-import ResultPage from '../components/pages/ResultPage.vue'
-import ClosePage from '../components/pages/ClosePage.vue'
+import ResultPage from '../components/pages/resultPage.vue'
+import ClosePage from '../components/pages/closePage.vue'
 import { auth } from '@/firebase'
-import QuestionsView from '@/views/QuestionsView.vue'
-import PostgradosView from '@/views/PostgradosView.vue'
+import QuestionsPage from '@/components/pages/questionsPage.vue'
+import PosgradosPage from '@/components/pages/posgradosPage.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,13 +48,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/questions',
     name: 'Admin questions',
-    component: QuestionsView,
+    component: QuestionsPage,
     meta: { requiresAuth: true },
   },
   {
     path: '/admin/postgrados',
     name: 'Admin postgrados',
-    component: PostgradosView,
+    component: PosgradosPage,
     meta: { requiresAuth: true },
   },
   {
