@@ -92,9 +92,9 @@
 
 <script setup lang="ts">
   import { ref, watch, onMounted, Ref } from 'vue'
-  import MultipleChoiceOption from '@/components/questionLogicComponents/multipleChoice.vue'
-  import SliderSelect from '@/components/questionLogicComponents/sliderSelect.vue'
-  import TrueFalse from '@/components/questionLogicComponents/trueFalse.vue'
+  import MultipleChoiceOption from '@/components/helper/multipleChoice.vue'
+  import SliderSelect from '@/components/helper/sliderSelect.vue'
+  import TrueFalse from '@/components/helper/trueFalse.vue'
   import { Question, MultipleChoiceQuestion } from '@/types/QuestionsType'
 
   // lógica modular

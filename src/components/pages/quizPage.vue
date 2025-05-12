@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { currentQuestion, updateAnswer, answers } from '@/services/quizService'
 
-  import MultipleChoiceDisplay from '@/components/questionComponents/MultipleChoice.vue'
-  import SliderDisplay from '@/components/questionComponents/SliderSelect.vue'
-  import TrueFalseDisplay from '@/components/questionComponents/TrueFalse.vue'
+  import MultipleChoiceDisplay from '@/components/questions/MultipleChoice.vue'
+  import SliderDisplay from '@/components/questions/SliderSelect.vue'
+  import TrueFalseDisplay from '@/components/questions/TrueFalse.vue'
 </script>
 
 <template>
