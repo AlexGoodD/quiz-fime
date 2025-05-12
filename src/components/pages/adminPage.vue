@@ -16,7 +16,10 @@
         />
       </div>
       <router-link to="/admin/questions" title="Panel de control">
-        texto
+        Preguntas
+      </router-link>
+      <router-link to="/admin/postgrados" title="Panel de control">
+        Postgrados
       </router-link>
     </div>
     <div v-else>

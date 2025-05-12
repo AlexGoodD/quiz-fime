@@ -8,6 +8,7 @@ import ResultPage from '../components/pages/ResultPage.vue';
 import ClosePage from '../components/pages/ClosePage.vue';
 import { auth } from '@/firebase';
 import QuestionsView from "@/views/QuestionsView.vue";
+import PostgradosView from "@/views/PostgradosView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,6 +49,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/admin/questions',
     name: 'Admin questions',
     component: QuestionsView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/postgrados',
+    name: 'Admin postgrados',
+    component: PostgradosView,
     meta: { requiresAuth: true },
   },
   {
