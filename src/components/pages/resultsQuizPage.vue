@@ -4,7 +4,7 @@
     <div class="tw-w-[80%]">
       <div
         v-if="userAnswers.length"
-        class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] tw-gap4"
+        class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] tw-gap-4"
       >
         <div
           v-for="(userAnswer, index) in userAnswers"
