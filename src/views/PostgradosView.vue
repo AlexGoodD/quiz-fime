@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
-  import PostgradosItem from '@/components/postgradosItem.vue'
+  import PostgradosItem from '@/components/adminComponents/postgradosItem.vue'
   import SaveButton from '@/components/saveButton.vue'
   import { PostgradoType } from '@/types/PosgradoType'
   import { AreaType } from '@/types/AreasType'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
-  import questionItem from '@/components/questionItem.vue'
+  import questionItem from '@/components/adminComponents/questionItem.vue'
   import SaveButton from '@/components/saveButton.vue'
   import { fetchAreas } from '@/services/areaService'
   import { Question } from '@/types/QuestionsType'

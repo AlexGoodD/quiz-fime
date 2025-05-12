@@ -70,8 +70,9 @@
         <div v-else-if="questionType === 'trueFalse'" class="tw-flex tw-flex-col tw-gap-2">
           <label class="tw-font-bold">Asignación de puntos</label>
           <TrueFalse
+            v-if="isTrueFalse"
             :areas="areasDisponibles"
-            :model-value="trueFalseConfig ?? { Verdadero: {}, Falso: {} }"
+            :model-value="trueFalseValues"
             @update="updateTrueFalse"
           />
         </div>
@@ -90,43 +91,45 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watch, computed, onMounted } from 'vue'
-  import MultipleChoiceOption from '@/components/questionsCreate/multipleChoice.vue'
-  import SliderSelect from '@/components/questionsCreate/sliderSelect.vue'
-  import TrueFalse from '@/components/questionsCreate/trueFalse.vue'
-  import { MultipleChoiceQuestion, Question } from '@/types/QuestionsType'
+  import { ref, watch, onMounted, Ref } from 'vue'
+  import MultipleChoiceOption from '@/components/questionLogicComponents/multipleChoice.vue'
+  import SliderSelect from '@/components/questionLogicComponents/sliderSelect.vue'
+  import TrueFalse from '@/components/questionLogicComponents/trueFalse.vue'
+  import { Question, MultipleChoiceQuestion } from '@/types/QuestionsType'
 
-  // Props recibidas del padre
+  // lógica modular
+  import { useSliderLogic } from '@/utils/useSliderLogic'
+  import { useMultipleChoiceLogic } from '@/utils/useMultipleChoiceLogic'
+  import { useTrueFalseLogic } from '@/utils/useTrueFalseLogic'
+
+  // Props
   const props = defineProps<{
     modelValue: Question
     areasDisponibles: string[]
   }>()
 
-  // Emisión para actualizar la pregunta en el componente padre
   const emit = defineEmits<{
     (e: 'update', value: Question): void
     (e: 'delete'): void
   }>()
 
-  // Se crea una copia reactiva local de modelValue
   const questionData = ref<Question>({ ...props.modelValue })
-  // Variable para controlar el tipo de pregunta (slider, multipleChoice, trueFalse)
   const questionType = ref<Question['type']>(props.modelValue.type)
-
-  // Otras variables locales
   const showDetails = ref(false)
 
-  const multipleOptions = ref<Array<{ option: string; areaPoints: Record<string, number> }>>([])
-  const trueFalseConfig = ref({})
+  // --- Composables ---
+  const { sliderData, updateSliderConfig, isSlider } = useSliderLogic(questionData)
+  const {
+    multipleOptions,
+    initialize: initMultipleChoice,
+    addOption,
+    updateOption,
+    removeOption,
+  } = useMultipleChoiceLogic(questionData as Ref<MultipleChoiceQuestion>)
 
-  // Computed para detectar si es una pregunta slider y para estrechar su tipado
-  const isSlider = computed(() => questionData.value.type === 'slider')
-  const sliderData = computed(() =>
-    isSlider.value ? (questionData.value as Extract<Question, { type: 'slider' }>) : null
-  )
+  const { isTrueFalse, trueFalseValues, updateTrueFalse } = useTrueFalseLogic(questionData)
 
-  // Sincroniza los cambios que se produzcan en la prop modelValue con la copia local,
-  // pero solo si existe alguna diferencia (para evitar actualizaciones innecesarias)
+  // --- Sync props.modelValue -> local ---
   watch(
     () => props.modelValue,
     (nuevo) => {
@@ -134,44 +137,20 @@
         questionData.value = { ...nuevo }
         questionType.value = nuevo.type
 
-        // 👇 Llama a la inicialización si es multipleChoice
-        if (nuevo.type === 'multipleChoice') {
-          initializeMultipleChoice()
-        }
+        if (nuevo.type === 'multipleChoice') initMultipleChoice()
       }
     },
     { deep: true }
   )
 
-  function initializeMultipleChoice() {
-    const mcq = questionData.value as MultipleChoiceQuestion
+  // --- Cambiar tipo de pregunta manualmente ---
+  watch(questionType, (tipo) => {
+    questionData.value.type = tipo
 
-    if (!mcq.options) mcq.options = []
-    if (!mcq.values) mcq.values = {}
-
-    multipleOptions.value = mcq.options.map((option) => ({
-      option,
-      areaPoints: mcq.values[option] ?? {},
-    }))
-  }
-
-  // Cuando se modifique el select de tipo, actualiza el campo en questionData
-  watch(questionType, (nuevoTipo) => {
-    questionData.value.type = nuevoTipo
-
-    if (nuevoTipo === 'trueFalse') {
-      const tfq = questionData.value as Extract<Question, { type: 'trueFalse' }>
-      if (!tfq.values) {
-        tfq.values = { Verdadero: {}, Falso: {} }
-      }
-    }
-
-    if (nuevoTipo === 'multipleChoice') {
-      initializeMultipleChoice()
-    }
+    if (tipo === 'multipleChoice') initMultipleChoice()
   })
 
-  // Emite cambios al componente padre de forma diferida (debounce) para evitar loops infinitos
+  // --- Emit update (debounce) ---
   let updateTimeout: ReturnType<typeof setTimeout> | null = null
   watch(
     questionData,
@@ -184,78 +163,8 @@
     { deep: true }
   )
 
-  // Función para actualizar la configuración del slider
-  function updateSliderConfig(data: {
-    min: number
-    max: number
-    sliderLogics: {
-      type: 'range'
-      area: string
-      minPoints: number
-      maxPoints: number
-    }[]
-  }) {
-    if (questionData.value.type === 'slider') {
-      questionData.value.min = data.min
-      questionData.value.max = data.max
-      questionData.value.sliderLogics = data.sliderLogics
-    }
-  }
-
-  function addOption() {
-    multipleOptions.value.push({ option: '', areaPoints: {} })
-    syncMultipleChoice()
-  }
-
-  function updateOption(
-    index: number,
-    data: { option: string; areaPoints: Record<string, number> }
-  ) {
-    multipleOptions.value[index] = data
-    syncMultipleChoice()
-  }
-
-  function removeOption(index: number) {
-    multipleOptions.value.splice(index, 1)
-    syncMultipleChoice()
-  }
-
-  function syncMultipleChoice() {
-    const options: string[] = []
-    const values: MultipleChoiceQuestion['values'] = {}
-
-    for (const opt of multipleOptions.value) {
-      if (opt.option) {
-        options.push(opt.option)
-        values[opt.option] = opt.areaPoints
-      }
-    }
-
-    const mcq = questionData.value as MultipleChoiceQuestion
-    mcq.options = options
-    mcq.values = values
-  }
-
-  function updateTrueFalse(data: {
-    Verdadero: { [area: string]: number }
-    Falso: { [area: string]: number }
-  }) {
-    trueFalseConfig.value = data
-    if (questionData.value.type === 'trueFalse') {
-      ;(questionData.value as Extract<Question, { type: 'trueFalse' }>).values = data
-    }
-  }
-
   onMounted(() => {
-    if (questionType.value === 'multipleChoice') {
-      initializeMultipleChoice()
-    }
-
-    if (questionType.value === 'trueFalse') {
-      console.log('Valores al montar ', questionData.value)
-      const tfq = questionData.value as Extract<Question, { type: 'trueFalse' }>
-      trueFalseConfig.value = tfq.values ?? { Verdadero: {}, Falso: {} }
-    }
+    if (questionType.value === 'multipleChoice') initMultipleChoice()
   })
 </script>
 
