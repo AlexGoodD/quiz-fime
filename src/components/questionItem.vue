@@ -3,9 +3,9 @@
     class="tw-flex tw-text-left tw-flex-col tw-gap-3 tw-mt-0 tw-mx-[10rem] tw-border tw-border-[#ccc] tw-p-8 tw-rounded-2xl"
   >
     <div class="tw-flex tw-mt-4 tw-justify-between tw-align-center tw-border-b tw-border-[#ccc]">
-      <h2 class="tw-text-2xl tw-font-bold tw-mb-4">Pregunta 1</h2>
+      <h2 class="tw-text-2xl tw-font-bold tw-mb-4">Pregunta {{ questionData.position }}</h2>
       <div class="tw-flex tw-gap-10 tw-align-center">
-        <button>
+        <button @click="emit('delete')">
           <font-awesome-icon
             icon="trash"
             class="tw-text-[#ccc] tw-transition-colors tw-duration-500 hover:tw-text-red-400"
@@ -13,6 +13,7 @@
         </button>
       </div>
     </div>
+
     <div class="tw-flex tw-flex-col tw-text-left tw-gap-2">
       <label class="tw-text-base tw-font-bold" for="questionText">Pregunta</label>
       <input
@@ -20,6 +21,7 @@
         id="questionText"
         type="text"
         placeholder="Escribe tu pregunta aquí"
+        v-model="questionData.question"
       />
     </div>
 
@@ -40,15 +42,22 @@
       <div v-if="showDetails">
         <div v-if="questionType === 'slider'" class="tw-flex tw-flex-col tw-gap-2">
           <label class="tw-font-bold">Rango de valores</label>
-          <SliderSelect :areas="areaList" @update="sliderConfig = $event" />
+          <SliderSelect
+            v-if="isSlider && sliderData"
+            :areas="areasDisponibles"
+            :min="sliderData.min"
+            :max="sliderData.max"
+            :sliderLogics="sliderData.sliderLogics"
+            @update="updateSliderConfig"
+          />
         </div>
 
         <div v-else-if="questionType === 'multipleChoice'" class="tw-flex tw-flex-col tw-gap-2">
           <label class="tw-font-bold">Opciones</label>
           <MultipleChoiceOption
-            v-for="i in options"
+            v-for="(opt, i) in options"
             :key="i"
-            :areas="areaList"
+            :areas="areasDisponibles"
             @update="updateOption(i, $event)"
           />
           <button @click="addOption" class="tw-text-blue-600 hover:tw-underline tw-w-fit tw-mt-2">
@@ -58,12 +67,11 @@
 
         <div v-else-if="questionType === 'trueFalse'" class="tw-flex tw-flex-col tw-gap-2">
           <label class="tw-font-bold">Asignación de puntos</label>
-          <TrueFalse :areas="areaList" @update="trueFalseConfig = $event" />
+          <TrueFalse :areas="areasDisponibles" @update="trueFalseConfig = $event" />
         </div>
       </div>
     </transition>
 
-    <!-- Botón de expandir/colapsar -->
     <div class="tw-flex tw-justify-center tw-mt-4 -tw-mb-4">
       <button
         @click="showDetails = !showDetails"
@@ -76,32 +84,95 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, watch, computed } from 'vue'
   import MultipleChoiceOption from '@/components/questionsCreate/multipleChoice.vue'
   import SliderSelect from '@/components/questionsCreate/sliderSelect.vue'
   import TrueFalse from '@/components/questionsCreate/trueFalse.vue'
+  import { Question } from '@/types/QuestionsType'
 
-  const questionType = ref<'slider' | 'multipleChoice' | 'trueFalse'>('slider')
+  // Props recibidas del padre
+  const props = defineProps<{
+    modelValue: Question
+    areasDisponibles: string[]
+  }>()
 
-  const showDetails = ref(true)
+  // Emisión para actualizar la pregunta en el componente padre
+  const emit = defineEmits<{
+    (e: 'update', value: Question): void
+    (e: 'delete'): void
+  }>()
 
-  const areaList = [
-    'Nanotecnología',
-    'Logística y Cadena de SuministrossssssssssLogística y Cadena de SuministrossssssssssLogística y Cadena de SuministrossssssssssLogística y Cadena de Suministrossssssssss',
-    'Ingeniería Eléctrica',
-    'Tecnologías de la Información',
-  ]
+  // Se crea una copia reactiva local de modelValue
+  const questionData = ref<Question>({ ...props.modelValue })
+  // Variable para controlar el tipo de pregunta (slider, multipleChoice, trueFalse)
+  const questionType = ref<Question['type']>(props.modelValue.type)
 
+  // Otras variables locales
+  const showDetails = ref(false)
   const options = ref<Array<any>>([])
-
-  const sliderConfig = ref({})
-
   const trueFalseConfig = ref({})
 
+  // Computed para detectar si es una pregunta slider y para estrechar su tipado
+  const isSlider = computed(() => questionData.value.type === 'slider')
+  const sliderData = computed(() =>
+    isSlider.value ? (questionData.value as Extract<Question, { type: 'slider' }>) : null
+  )
+
+  // Sincroniza los cambios que se produzcan en la prop modelValue con la copia local,
+  // pero solo si existe alguna diferencia (para evitar actualizaciones innecesarias)
+  watch(
+    () => props.modelValue,
+    (nuevo) => {
+      if (JSON.stringify(nuevo) !== JSON.stringify(questionData.value)) {
+        questionData.value = { ...nuevo }
+        questionType.value = nuevo.type
+      }
+    },
+    { deep: true }
+  )
+
+  // Cuando se modifique el select de tipo, actualiza el campo en questionData
+  watch(questionType, (nuevoTipo) => {
+    questionData.value.type = nuevoTipo
+  })
+
+  // Emite cambios al componente padre de forma diferida (debounce) para evitar loops infinitos
+  let updateTimeout: ReturnType<typeof setTimeout> | null = null
+  watch(
+    questionData,
+    () => {
+      if (updateTimeout) clearTimeout(updateTimeout)
+      updateTimeout = setTimeout(() => {
+        emit('update', { ...questionData.value })
+      }, 100)
+    },
+    { deep: true }
+  )
+
+  // Función para actualizar la configuración del slider
+  function updateSliderConfig(data: {
+    min: number
+    max: number
+    sliderLogics: {
+      type: 'range'
+      area: string
+      minPoints: number
+      maxPoints: number
+    }[]
+  }) {
+    if (questionData.value.type === 'slider') {
+      questionData.value.min = data.min
+      questionData.value.max = data.max
+      questionData.value.sliderLogics = data.sliderLogics
+    }
+  }
+
+  // Función para agregar una opción en preguntas de selección múltiple
   function addOption() {
     options.value.push({})
   }
 
+  // Función para actualizar una opción en preguntas de selección múltiple
   function updateOption(index: number, data: { option: string; area: string; points: number }) {
     options.value[index] = data
   }

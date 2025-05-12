@@ -8,7 +8,9 @@
 </template>
 
 <script setup lang="ts">
+  const emit = defineEmits(['save'])
+
   const handleClick = () => {
-    console.log('Floating button clicked')
+    emit('save')
   }
 </script>
