@@ -25,21 +25,16 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getUserAnswers } from '../../services/submitService'
+  import { getUserAnswers } from '@/services/submitService'
+  import { AnswerType } from '@/types/Answer'
 
-  interface UserAnswer {
-    id: string
-    timestamp: string
-  }
-
-  const userAnswers = ref<UserAnswer[]>([])
+  const userAnswers = ref<AnswerType[]>([])
   const router = useRouter()
 
   onMounted(async () => {
-    const answers = await getUserAnswers()
-    userAnswers.value = answers
+    userAnswers.value = await getUserAnswers()
   })
 
   function goToResultPage(id: string) {
