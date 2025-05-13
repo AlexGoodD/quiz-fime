@@ -5,12 +5,13 @@ export interface Answer {
 
 export interface UserAnswer {
   id: string
-  timestamp: string
+  userId: string
+  timestamp: any
   answers: {
     question: string
     answer: string | number
   }[]
-  posgrado: string
+  posgrado?: string
 }
 
 export type AnswerType = Answer | UserAnswer

@@ -13,6 +13,7 @@
       >
         <button
           class="tw-text-gray-600 tw-flex tw-w-8 tw-text-4xl tw-p-1 tw-items-center tw-justify-center"
+          @click="exportQuiz"
         >
           <font-awesome-icon :icon="['fas', 'file-lines']" />
         </button>
@@ -25,6 +26,7 @@
         class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-transition tw-transform tw-duration-500 hover:tw-scale-105"
       >
         <button
+          @click="exportCharts"
           class="tw-text-gray-600 tw-flex tw-w-8 tw-text-4xl tw-p-1 tw-items-center tw-justify-center"
         >
           <font-awesome-icon :icon="['fas', 'chart-simple']" />
@@ -38,6 +40,7 @@
         class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-transition tw-transform tw-duration-500 hover:tw-scale-105"
       >
         <button
+          @click="exportQuizCSV"
           class="tw-text-gray-600 tw-flex tw-w-8 tw-text-4xl tw-p-1 tw-items-center tw-justify-center"
         >
           <font-awesome-icon :icon="['fas', 'file-csv']" />
@@ -52,10 +55,57 @@
 </template>
 
 <script setup lang="ts">
-  import { defineProps } from 'vue'
+  import { ref, defineProps } from 'vue'
+  import { exportAnswers, exportAnswersCSV, exportGraphs } from '@/services/exportService'
 
   const props = defineProps<{
     title: string
-    areaScores: { area: string; average: number }[]
   }>()
+
+  const isImporting = ref(false)
+
+  async function exportQuiz() {
+    const confirmed = confirm(
+      'Se descargarán dos archivos con los cuestionarios.\n¿Estás seguro de que deseas continuar?'
+    )
+    if (!confirmed) return
+
+    isImporting.value = true
+
+    try {
+      await exportAnswers()
+    } finally {
+      isImporting.value = false
+    }
+  }
+
+  async function exportCharts() {
+    const confirmed = confirm(
+      'Se descargarán las gráficas de distribución de posgrados, crecimiento semanal de formularios y el interes promedio por área.\n¿Estás seguro de que deseas continuar?'
+    )
+    if (!confirmed) return
+
+    isImporting.value = true
+
+    try {
+      await exportGraphs()
+    } finally {
+      isImporting.value = false
+    }
+  }
+
+  async function exportQuizCSV() {
+    const confirmed = confirm(
+      'Se descargará un archivo con los cuestionarios en formato CSV.\n¿Estás seguro de que deseas continuar?'
+    )
+    if (!confirmed) return
+
+    isImporting.value = true
+
+    try {
+      await exportAnswersCSV()
+    } finally {
+      isImporting.value = false
+    }
+  }
 </script>
