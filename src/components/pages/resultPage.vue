@@ -30,7 +30,7 @@
             <div class="tw-font-semibold">Respuestas</div>
             <template v-for="(answer, idx) in userAnswer.answers" :key="idx">
               <div>{{ answer.question || 'Pregunta no disponible' }}</div>
-              <div>{{ answer.answer || 'Respuesta no disponible' }}</div>
+              <div>{{ answer.answer || 'Sin responder' }}</div>
             </template>
           </div>
         </div>

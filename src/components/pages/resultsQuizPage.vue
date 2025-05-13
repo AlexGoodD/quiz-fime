@@ -9,6 +9,7 @@
           :timestamp="userAnswer.timestamp"
           :id="userAnswer.id"
           :posgrado="userAnswer.posgrado"
+          :answered-questions="countAnsweredQuestions(userAnswer.answers)"
           @view-details="goToResultPage"
         />
       </div>
@@ -22,7 +23,7 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getUserAnswers } from '@/services/submitService'
+  import { countAnsweredQuestions, getUserAnswers } from '@/services/submitService'
   import { UserAnswer } from '@/types/Answer'
   import ResultsItem from '@/components/items/resultsItem.vue'
 

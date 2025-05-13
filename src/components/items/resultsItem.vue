@@ -10,7 +10,8 @@
       <p class="tw-text-lg">
         {{ formattedTimestamp }}
       </p>
-      <p class="tw-text-xl tw-font-medium tw-truncate tw-w-[20rem]">{{ posgrado }}</p>
+      <p class="tw-text-lg tw-font-medium tw-truncate tw-w-[20rem]">{{ posgrado }}</p>
+      <p>{{ answeredQuestions }} preguntas respondidas</p>
     </div>
     <button
       class="tw-bg-gray-200 tw-py-2 tw-px-8 tw-rounded-lg tw-font-medium tw-transition-colors tw-duration-500 hover:tw-bg-gray-300"
@@ -28,6 +29,7 @@
     timestamp: String,
     id: String,
     posgrado: String,
+    answeredQuestions: Number,
   })
   const formattedTimestamp = computed(() => {
     const date = new Date(props.timestamp)

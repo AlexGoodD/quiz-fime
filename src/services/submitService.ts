@@ -25,6 +25,10 @@ export async function submitAnswers(answers: Answer[]) {
   }
 }
 
+export function countAnsweredQuestions(answers: Answer[]): number {
+  return answers.filter((answer) => answer.answer !== null).length
+}
+
 export async function getUserAnswers(): Promise<UserAnswer[]> {
   const user = auth.currentUser
   if (!user) throw new Error('Usuario no autenticado')
