@@ -2,49 +2,58 @@
   <div class="tw-flex tw-flex-col tw-items-start tw-w-[100vw] tw-h-[100%] tw-mr-4">
     <!-- Alineado a la izquierda como las gráficas -->
     <h1 class="tw-text-4xl tw-mt-10 tw-font-bold tw-mb-5 tw-pl-[8rem]">Panel de control</h1>
-
-    <div v-if="isAdmin">
-      <!-- Contenido principal -->
-      <div class="tw-flex tw-pl-[6rem] tw-flex-row tw-items-start tw-w-[100vw] tw-gap-x-8 tw-mb-12">
-        <!-- Columna izquierda -->
-        <div id="left-items" class="tw-flex tw-flex-col">
-          <div class="tw-flex tw-gap-x-4">
-            <AdminItem title="Usuarios Registrados" :icon="['fas', 'user']" :result="totalUsers" />
-            <AdminItem
-              title="Formularios Enviados"
-              :icon="['fas', 'file-lines']"
-              :result="totalResponses"
+    <div v-if="!loading">
+      <div v-if="isAdmin">
+        <div
+          class="tw-flex tw-pl-[6rem] tw-flex-row tw-items-start tw-w-[100vw] tw-gap-x-8 tw-mb-12"
+        >
+          <!-- Columna izquierda -->
+          <div id="left-items" class="tw-flex tw-flex-col">
+            <div class="tw-flex tw-gap-x-4">
+              <AdminItem
+                title="Usuarios Registrados"
+                :icon="['fas', 'user']"
+                :result="totalUsers"
+              />
+              <AdminItem
+                title="Formularios Enviados"
+                :icon="['fas', 'file-lines']"
+                :result="totalResponses"
+              />
+            </div>
+            <ScaleChart
+              v-if="weeklyFormChartData"
+              title="Crecimiento Semanal de Formularios"
+              :chartData="weeklyFormChartData"
             />
+            <CreateItem />
           </div>
-          <ScaleChart
-            v-if="weeklyFormChartData"
-            title="Crecimiento Semanal de Formularios"
-            :chartData="weeklyFormChartData"
-          />
-          <CreateItem />
-        </div>
 
-        <!-- Columna centro -->
-        <div id="center-items" class="tw-flex tw-flex-col">
-          <PieChart
-            v-if="posgradosChartData"
-            title="Distribución de Posgrados"
-            :chartData="posgradosChartData"
-          />
-          <QualityItem title="Calidad de Preguntas" />
-        </div>
+          <!-- Columna centro -->
+          <div id="center-items" class="tw-flex tw-flex-col">
+            <PieChart
+              v-if="posgradosChartData"
+              title="Distribución de Posgrados"
+              :chartData="posgradosChartData"
+            />
+            <QualityItem title="Calidad de Preguntas" />
+          </div>
 
-        <!-- Columna derecha (opcional) -->
-        <div id="right-items" class="tw-w-[200px]">
-          <TopPosgradoItem title="Top Posgrados Recomendados" :topResults="topPosgrados" />
-          <TopAreaItem title="Interés Promedio por Área" :areaScores="areaAverages" />
-          <ExportOptionsItem title="Opciones de Exportación" :areaScores="areaAverages" />
+          <!-- Columna derecha (opcional) -->
+          <div id="right-items" class="tw-w-[200px]">
+            <TopPosgradoItem title="Top Posgrados Recomendados" :topResults="topPosgrados" />
+            <TopAreaItem title="Interés Promedio por Área" :areaScores="areaAverages" />
+            <ExportOptionsItem title="Opciones de Exportación" :areaScores="areaAverages" />
+          </div>
         </div>
       </div>
-    </div>
 
+      <div v-else>
+        <p class="tw-pl-[8rem]">No tienes permisos para ver esta sección.</p>
+      </div>
+    </div>
     <div v-else>
-      <p class="tw-pl-[8rem]">No tienes permisos para ver esta sección.</p>
+      <p class="tw-pl-[8rem] tw-animate-pulse">Cargando panel...</p>
     </div>
   </div>
 </template>
@@ -80,13 +89,16 @@
   const topPosgrados = ref<{ name: string; count: number }[]>([])
   const areaAverages = ref<{ area: string; average: number }[]>([])
   const questions = ref<Question[]>([])
+  const loading = ref(true)
 
   onMounted(async () => {
     if (isAdmin.value) {
       const metrics = await getMetrics()
       totalUsers.value = metrics.totalUsers
       totalResponses.value = metrics.totalResponses
+
       questions.value = (await getQuestions()) as unknown as Question[]
+
       const posgradosCount = await getPosgradosWithCounts()
       posgradosChartData.value = {
         labels: Object.keys(posgradosCount),
@@ -97,9 +109,12 @@
           },
         ],
       }
+
       weeklyFormChartData.value = await getDailyFormSubmissions()
       topPosgrados.value = await getTopPosgrados(3)
       areaAverages.value = await getAverageAreaScores()
+
+      loading.value = false
     }
   })
 </script>

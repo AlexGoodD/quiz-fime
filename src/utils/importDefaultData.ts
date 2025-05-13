@@ -28,8 +28,9 @@ export async function importDefaultData() {
     for (const question of questions) {
       await addDoc(questionsCollection, question)
     }
-    console.log('Preguntas importadas correctamente.')
+    alert('La información fue importada con éxito. Recargue la página para ver los cambios.')
   } catch (error) {
+    alert('Hubo un error al importar la información. Recargue la página e intente de nuevo.')
     console.error('Error al importar datos:', error)
   }
 }

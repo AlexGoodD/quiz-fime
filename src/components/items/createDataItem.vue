@@ -16,12 +16,19 @@
       <font-awesome-icon :icon="['fas', 'plus']" class="tw-ml-2 tw-mr-4" />
       Crear nuevo posgrado
     </router-link>
-    <div
+    <button
+      @click="importData"
       class="tw-flex tw-w-[100%] tw-p-2 tw-rounded-lg tw-border tw-bg-gray-200 tw-items-center tw-transition tw-transform tw-duration-500 hover:tw-bg-gray-300 hover:tw-cursor-pointer hover:-tw-translate-y-2"
     >
-      <font-awesome-icon :icon="['fas', 'download']" class="tw-ml-2 tw-mr-4" />
-      Exportar resultados
-    </div>
+      <font-awesome-icon :icon="['fas', 'file-import']" class="tw-ml-2 tw-mr-4" />
+      Importar información
+    </button>
   </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { importDefaultData } from '@/utils/importDefaultData'
+
+  async function importData() {
+    importDefaultData()
+  }
+</script>
