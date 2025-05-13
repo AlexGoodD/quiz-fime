@@ -49,12 +49,13 @@ export async function getQuestions() {
 
   const questionMap = questions.reduce(
     (acc, question) => {
+      const key = normalize(question.question)
       if (question.type === 'slider') {
-        acc[question.question] = initializeSliderQuestion(question)
+        acc[key] = initializeSliderQuestion(question)
       } else if (question.type === 'trueFalse') {
-        acc[question.question] = initializeTrueFalseQuestion(question)
+        acc[key] = initializeTrueFalseQuestion(question)
       } else {
-        acc[question.question] = intializeMultipleChoiceQuestion(question)
+        acc[key] = intializeMultipleChoiceQuestion(question)
       }
       return acc
     },
@@ -62,15 +63,22 @@ export async function getQuestions() {
   )
 
   answers.forEach((answerDoc) => {
-    answerDoc.answers.forEach((answer: { question: string; answer: string | number }) => {
-      const question = questionMap[answer.question]
-      if (question) {
-        const optionIndex = question.options.indexOf(answer.answer.toString())
-        if (optionIndex !== -1) {
-          question.responses[optionIndex]++
+    answerDoc.answers.forEach(
+      (answer: { question: string; answer: string | number | null | undefined }) => {
+        if (!answer || answer.answer == null || answer.question == null) return
+
+        const key = normalize(answer.question)
+        const question = questionMap[key]
+
+        if (question) {
+          const answerStr = answer.answer.toString()
+          const optionIndex = question.options.indexOf(answerStr)
+          if (optionIndex !== -1) {
+            question.responses[optionIndex]++
+          }
         }
       }
-    })
+    )
   })
 
   return Object.values(questionMap)
@@ -112,4 +120,8 @@ export function subscribeToUserAuth(callback: (isAdmin: boolean) => void) {
     return unsubscribe
   }
   return null
+}
+
+function normalize(str: string) {
+  return str.trim().toLowerCase()
 }
