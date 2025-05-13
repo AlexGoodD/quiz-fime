@@ -26,9 +26,22 @@
   </div>
 </template>
 <script setup lang="ts">
+  import { ref } from 'vue'
   import { importDefaultData } from '@/utils/importDefaultData'
 
+  const isImporting = ref(false)
+
   async function importData() {
-    importDefaultData()
+    const confirmed = confirm(
+      '¿Estás seguro de que deseas importar áreas, posgrados y preguntas?\nEsto puede duplicar información si ya existe.'
+    )
+    if (!confirmed) return
+
+    isImporting.value = true
+    try {
+      await importDefaultData()
+    } finally {
+      isImporting.value = false
+    }
   }
 </script>

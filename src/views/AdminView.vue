@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tw-overflow-hidden">
     <AdminPage v-if="isAdmin" />
   </div>
 </template>
@@ -12,12 +12,14 @@
   const isAdmin = ref(localStorage.getItem('isAdmin') === 'true')
 
   onMounted(() => {
+    document.body.style.overflow = 'hidden'
     const unsubscribe = subscribeToUserAuth((isAdminValue) => {
       isAdmin.value = isAdminValue
     })
 
     if (unsubscribe) {
       onUnmounted(() => {
+        document.body.style.overflow = ''
         unsubscribe()
       })
     }
