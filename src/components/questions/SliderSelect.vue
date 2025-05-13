@@ -1,53 +1,49 @@
 <script setup lang="ts">
-  import { defineProps, ref, watch } from 'vue'
-  import { updateAnswer } from '@/services/quizService'
+  import { ref, watch, defineProps, defineEmits } from 'vue'
 
   const props = defineProps<{
     question: string
     modelValue: number
     min: number
     max: number
+    position: number
   }>()
 
-  const sliderValue = ref(props.modelValue ?? props.min)
+  const sliderValue = ref(props.modelValue)
 
-  watch(
-    () => props.modelValue,
-    (newVal) => {
-      sliderValue.value = newVal
-    }
-  )
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: { position: number; value: number }): void
+  }>()
 
-  function selectSliderValue() {
-    updateAnswer(sliderValue.value)
-  }
+  watch(sliderValue, (val) => {
+    emit('update:modelValue', { position: props.position, value: val })
+  })
 </script>
 
 <template>
   <div class="slider-container">
-    <h1 class="tw-mb-4 tw-text-large tw-font-medium">{{ question }}</h1>
+    <h1 class="tw-mb-4 tw-text-large tw-font-medium">{{ props.question }}</h1>
     <input
       type="range"
-      :min="min"
-      :max="max"
+      :min="props.min"
+      :max="props.max"
       v-model="sliderValue"
-      @input="selectSliderValue"
       :style="{
         '--value': sliderValue,
-        '--min': min,
-        '--max': max,
+        '--min': props.min,
+        '--max': props.max,
       }"
       class="slider"
     />
     <div class="tickmarks">
       <span
-        v-for="n in max - min + 1"
+        v-for="n in props.max - props.min + 1"
         :key="n"
-        :data-active="n + min - 1 <= sliderValue"
+        :data-active="n + props.min - 1 <= sliderValue"
         :class="{
           tickmark: true,
           'tickmark--first': n === 1,
-          'tickmark--last': n + min - 1 === sliderValue,
+          'tickmark--last': n + props.min - 1 === sliderValue,
         }"
       />
     </div>

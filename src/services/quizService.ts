@@ -80,13 +80,9 @@ function prevQuestion() {
   }
 }
 
-function updateAnswer(value: number | string | null) {
-  if (currentQuestion.value.type === 'slider') {
-    answers.value[currentIndex.value] = Number(value)
-  } else {
-    answers.value[currentIndex.value] = value
-  }
-  //nextQuestion()
+function updateAnswer(value: number | string | null, position?: number) {
+  const pos = position !== undefined ? position : currentIndex.value
+  answers.value[pos] = value
 }
 
 export {
