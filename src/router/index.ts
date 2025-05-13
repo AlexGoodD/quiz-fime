@@ -34,6 +34,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/close',
+    name: 'close',
+    component: ClosePage,
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/result/:id',
     name: 'result',
     component: ResultPage,
@@ -56,11 +62,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Admin postgrados',
     component: PosgradosPage,
     meta: { requiresAuth: true },
-  },
-  {
-    path: '/close',
-    name: 'close',
-    component: ClosePage,
   },
 ]
 

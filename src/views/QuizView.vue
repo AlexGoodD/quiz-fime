@@ -10,8 +10,10 @@
     answers,
   } from '@/services/quizService'
   import { submitAnswers } from '@/services/submitService'
+  import { useRouter } from 'vue-router'
 
   const loading = ref(true)
+  const router = useRouter()
 
   const progress = computed(() => {
     return questions.value.length ? ((currentIndex.value + 1) / questions.value.length) * 100 : 0
@@ -24,10 +26,9 @@
         answer: answers.value[index],
       }))
       await submitAnswers(formattedAnswers)
-      alert('Respuestas enviadas con éxito')
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      await router.push('/close')
     } catch (error) {
-      alert('Error al enviar las respuestas')
+      alert('Ocurrió un error al enviar las respuestas')
     }
   }
 
