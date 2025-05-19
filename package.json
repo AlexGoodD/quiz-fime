@@ -2,11 +2,15 @@
   "name": "quiz-maestrias",
   "version": "0.1.0",
   "private": true,
+  "main": "electro-main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .js,.ts,.vue"
+    "lint": "eslint . --ext .js,.ts,.vue",
+    "electron": "npm run build && electron .",
+    "copy:main": "mkdir -p dist-electron && cp electro-main.js dist-electron/",
+    "build:electron": "npm run build && npm run copy:main && electron-builder"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -35,6 +39,8 @@
     "@typescript-eslint/parser": "^8.32.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.21",
+    "electron": "^36.2.1",
+    "electron-builder": "^26.0.12",
     "eslint": "^9.26.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
@@ -62,5 +68,19 @@
     "not dead",
     "not ie 11"
   ],
-  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
+  "build": {
+    "appId": "com.quiz.maestrias",
+    "productName": "Quizzer",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electro-main.js"
+    ],
+    "extraMetadata": {
+      "main": "electro-main.js"
+    }
+  }
 }
